@@ -408,3 +408,14 @@ footer { position: relative; z-index: 1; padding: 2rem 1.5rem; border-top: 1px s
   .nav-btn { padding: .5rem .8rem; }
   .ch-name { width: 90px; }
 }
+.college-logo-lg {
+  width: 80px;
+  height: auto;
+  object-fit: contain;
+}
+
+.college-logo-sm {
+  width: 45px;
+  height: auto;
+  object-fit: contain;
+}
