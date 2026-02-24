@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoTrack — Vehicle Carbon Footprint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<div class="bg-blobs">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<!-- ══════════════ NAVBAR ══════════════ -->
+<nav class="navbar">
+  <div class="nav-logo">🌿 NETZERO</div>
+  <div class="nav-links">
+    <button class="nav-btn active" data-page="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </button>
+    <button class="nav-btn" data-page="calculator">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="12" y2="15"/></svg>
+      Calculator
+    </button>
+    <button class="nav-btn" data-page="about">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      About
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════ HOME PAGE ══════════════ -->
+<div id="page-home" class="page">
+
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">🌍 Know Your Impact</div>
+      <h1 class="hero-title">Vehicle Carbon<br><span class="accent">Emissions</span> Matter</h1>
+      <p class="hero-sub">Transport accounts for <strong>24%</strong> of global CO₂ emissions. Understanding your vehicle's footprint — from tailpipe to full lifecycle — is the first step toward a cleaner planet.</p>
+      <button class="hero-cta" onclick="goPage('calculator')">Calculate My Footprint →</button>
+    </div>
+    <div class="hero-visual">
+      <div class="earth-ring">
+        <div class="earth">🌍</div>
+        <div class="orbit-dot d1">🚗</div>
+        <div class="orbit-dot d2">⚡</div>
+        <div class="orbit-dot d3">🏭</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats-strip">
+    <div class="stat-item">
+      <div class="stat-num">24%</div>
+      <div class="stat-lbl">of global CO₂ from transport</div>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat-item">
+      <div class="stat-num">4.7t</div>
+      <div class="stat-lbl">avg transport CO₂ per person/yr</div>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat-item">
+      <div class="stat-num">60%</div>
+      <div class="stat-lbl">lower emissions with an EV</div>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat-item">
+      <div class="stat-num">21kg</div>
+      <div class="stat-lbl">CO₂ absorbed per tree/year</div>
+    </div>
+  </section>
+
+  <section class="info-section">
+    <h2 class="section-title">What is <span class="accent">Carbon Emission?</span></h2>
+    <p class="section-para">Carbon emission refers to the release of carbon dioxide (CO₂) and other greenhouse gases into the atmosphere. When vehicles burn fossil fuels like petrol and diesel, they release CO₂ that traps heat, contributing to global warming and climate change.</p>
+
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="ic-icon" style="background:rgba(239,68,68,.15)">🏭</div>
+        <h3>Tailpipe Emissions</h3>
+        <p>CO₂ released directly from a vehicle's exhaust during combustion. This is the most visible and immediate form of vehicle pollution. Electric vehicles produce zero tailpipe emissions.</p>
+      </div>
+      <div class="info-card">
+        <div class="ic-icon" style="background:rgba(249,115,22,.15)">🔄</div>
+        <h3>Life Cycle Assessment</h3>
+        <p>The complete carbon cost — from mining raw materials and manufacturing, through all years of driving, to final disposal. LCA gives the most accurate real-world picture of environmental impact.</p>
+      </div>
+      <div class="info-card">
+        <div class="ic-icon" style="background:rgba(163,230,53,.15)">♻️</div>
+        <h3>Disposable / End-of-Life</h3>
+        <p>Emissions from scrapping, shredding, and recycling a vehicle at the end of its life. EVs score higher here due to the complexity of recycling lithium-ion battery packs.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="why-section">
+    <h2 class="section-title">Why Does It <span class="accent">Matter?</span></h2>
+    <div class="why-grid">
+      <div class="why-item">
+        <span class="why-icon">🌡️</span>
+        <div>
+          <strong>Global Warming</strong>
+          <p>CO₂ from vehicles traps heat, raising global temperatures and causing extreme weather events.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <span class="why-icon">🫁</span>
+        <div>
+          <strong>Air Quality</strong>
+          <p>Exhaust gases cause respiratory diseases, especially in cities with heavy traffic density.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <span class="why-icon">🌊</span>
+        <div>
+          <strong>Rising Sea Levels</strong>
+          <p>Melting ice caps due to global warming threaten coastal cities and millions worldwide.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <span class="why-icon">🌿</span>
+        <div>
+          <strong>You Can Help</strong>
+          <p>Switching to EVs, carpooling, or public transport can reduce your footprint by up to 70%.</p>
+        </div>
+      </div>
+    </div>
+    <div class="cta-center">
+      <button class="hero-cta" onclick="goPage('calculator')">Start Calculating →</button>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════ CALCULATOR PAGE ══════════════ -->
+<div id="page-calculator" class="page" style="display:none">
+  <div class="page-header">
+    <h1>Carbon Footprint <span class="accent">Calculator</span></h1>
+    <p class="page-sub">Measure your vehicle's CO₂ across Tailpipe · LCA · Disposable</p>
+  </div>
+  <div class="calc-wrap">
+
+    <section class="card">
+      <div class="form-group">
+        <label class="section-label">📊 Emission Measurement Type</label>
+        <div class="em-grid">
+          <button class="em-btn active" data-mode="tailpipe">
+            <div class="em-icon-wrap tailpipe-col">🏭</div>
+            <div class="em-text"><span class="em-name">Tailpipe</span><span class="em-sub">Direct exhaust CO₂ only</span></div>
+          </button>
+          <button class="em-btn" data-mode="lca">
+            <div class="em-icon-wrap lca-col">🔄</div>
+            <div class="em-text"><span class="em-name">LCA</span><span class="em-sub">Full lifecycle — cradle to grave</span></div>
+          </button>
+          <button class="em-btn" data-mode="disposable">
+            <div class="em-icon-wrap disp-col">♻️</div>
+            <div class="em-text"><span class="em-name">Disposable</span><span class="em-sub">End-of-life scrapping & recycling</span></div>
+          </button>
+        </div>
+        <div class="em-info-box" id="emInfoBox"></div>
+      </div>
+
+      <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="single">🚗 Single Vehicle</button>
+        <button class="mode-tab" data-mode="compare">⚖️ Compare Two</button>
+        <button class="mode-tab" data-mode="history">🕒 History</button>
+      </div>
+
+      <div id="singleMode">
+        <div class="form-group">
+          <label class="section-label">Select Vehicle</label>
+          <div class="search-box"><span class="s-icon">🔍</span><input type="text" id="vehicleSearch" placeholder="Search Toyota, Tesla, Pulsar..." autocomplete="off"/></div>
+          <div class="type-chips" id="typeChips"></div>
+          <div class="vlist" id="vehicleList"></div>
+          <div class="v-selected" id="vSelected" style="display:none"></div>
+        </div>
+        <div class="two-col">
+          <div class="form-group">
+            <label class="section-label">Distance per trip <em>(km)</em></label>
+            <div class="num-wrap"><input type="number" id="distance" value="20" min="0.1" step="0.1"/><span class="num-icon">📍</span></div>
+            <input type="range" id="distSlider" min="1" max="500" value="20" class="slider"/>
+          </div>
+          <div class="form-group">
+            <label class="section-label">Frequency</label>
+            <div class="pill-group" id="freqGroup">
+              <button class="pill active" data-val="daily">Daily</button>
+              <button class="pill" data-val="weekly">Weekly</button>
+              <button class="pill" data-val="monthly">Monthly</button>
+              <button class="pill" data-val="yearly">One-off</button>
+            </div>
+          </div>
+        </div>
+        <button class="go-btn" id="calcBtn">Calculate Footprint <span>→</span></button>
+      </div>
+
+      <div id="compareMode" style="display:none">
+        <div class="cmp-grid">
+          <div class="cmp-col">
+            <label class="section-label">🚗 Vehicle A</label>
+            <div class="search-box"><span class="s-icon">🔍</span><input type="text" id="searchA" placeholder="Search..." autocomplete="off"/></div>
+            <div class="vlist" id="listA"></div>
+            <div class="v-selected" id="selA" style="display:none"></div>
+          </div>
+          <div class="vs-badge">VS</div>
+          <div class="cmp-col">
+            <label class="section-label">🚙 Vehicle B</label>
+            <div class="search-box"><span class="s-icon">🔍</span><input type="text" id="searchB" placeholder="Search..." autocomplete="off"/></div>
+            <div class="vlist" id="listB"></div>
+            <div class="v-selected" id="selB" style="display:none"></div>
+          </div>
+        </div>
+        <div class="two-col" style="margin-top:1.5rem">
+          <div class="form-group">
+            <label class="section-label">Distance per trip <em>(km)</em></label>
+            <div class="num-wrap"><input type="number" id="distanceC" value="20" min="0.1" step="0.1"/><span class="num-icon">📍</span></div>
+            <input type="range" id="distSliderC" min="1" max="500" value="20" class="slider"/>
+          </div>
+          <div class="form-group">
+            <label class="section-label">Frequency</label>
+            <div class="pill-group" id="freqGroupC">
+              <button class="pill active" data-val="daily">Daily</button>
+              <button class="pill" data-val="weekly">Weekly</button>
+              <button class="pill" data-val="monthly">Monthly</button>
+              <button class="pill" data-val="yearly">One-off</button>
+            </div>
+          </div>
+        </div>
+        <button class="go-btn" id="compareBtn">Compare Vehicles <span>⚖️</span></button>
+      </div>
+
+      <div id="historyMode" style="display:none">
+        <div class="history-list" id="historyList"><div class="loading-text">Loading history...</div></div>
+      </div>
+    </section>
+
+    <section class="card result-card" id="resultsCard" style="display:none">
+      <div class="res-header">
+        <div><h2 id="resVehicleName">—</h2><div class="res-meta" id="resMeta"></div></div>
+        <div class="rating-pill" id="ratingPill"></div>
+      </div>
+      <div class="big-co2">
+        <span class="co2-num" id="co2Num">0</span>
+        <span class="co2-unit">kg CO₂ / year</span>
+      </div>
+      <div class="breakdown-panel">
+        <div class="bp-title">Emission Breakdown — all three measures for this vehicle</div>
+        <div class="bp-rows" id="bpRows"></div>
+      </div>
+      <div class="tiles">
+        <div class="tile"><div class="tile-val" id="tMonthly">—</div><div class="tile-lbl">kg CO₂ / month</div></div>
+        <div class="tile"><div class="tile-val" id="tDistance">—</div><div class="tile-lbl">km / year</div></div>
+        <div class="tile"><div class="tile-val" id="tTrees">—</div><div class="tile-lbl">🌳 trees to offset</div></div>
+      </div>
+      <div class="global-cmp">
+        <div class="gc-label">
+          <span>vs. Global Average Transport Emissions (4.7 t/yr)</span>
+          <span class="gc-pct" id="gcPct">—</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" id="globalBar"></div><div class="avg-line"></div></div>
+        <div class="gc-scale"><span>0</span><span>Global avg</span><span>10 t+</span></div>
+      </div>
+      <div class="tip-box" id="tipBox"></div>
+    </section>
+
+    <section class="card result-card" id="compareResultsCard" style="display:none">
+      <div class="res-header" style="margin-bottom:1.5rem">
+        <h2>⚖️ Comparison Results</h2>
+        <div class="em-tag" id="cmpEmTag"></div>
+      </div>
+      <div class="side-by-side" id="sideBySide"></div>
+      <div class="breakdown-panel" id="cmpBreakdown" style="margin-top:1.5rem"></div>
+      <div class="chart-section" id="chartSection"></div>
+      <div class="verdict-box" id="verdictBox"></div>
+    </section>
+  </div>
+</div>
+
+<!-- ══════════════ ABOUT PAGE ══════════════ -->
+<div id="page-about" class="page" style="display:none">
+  <div class="page-header">
+    <h1>About <span class="accent">EcoTrack</span></h1>
+    <p class="page-sub">Built with purpose, data, and a passion for a greener planet</p>
+  </div>
+  <div class="about-wrap">
+
+    <div class="card about-card">
+      <div class="about-icon-big">🌿</div>
+      <h2>What is EcoTrack?</h2>
+      <p>EcoTrack is a vehicle carbon footprint calculator that helps individuals understand the real environmental cost of their transport choices. We measure emissions across three dimensions — tailpipe, full lifecycle (LCA), and end-of-life disposal — giving the most complete picture available.</p>
+      <p style="margin-top:1rem">The project was built as part of academic research at <strong style="color:var(--accent2)">DSEU Dwarka</strong> to promote environmental awareness and data-driven decision making in transport.</p>
+    </div>
+
+    <div class="card about-card">
+      <h2>⚙️ Tech Stack</h2>
+      <div class="tech-grid">
+        <div class="tech-item"><span class="tech-icon">🐍</span><span class="tech-name">Python</span><span class="tech-role">Backend language</span></div>
+        <div class="tech-item"><span class="tech-icon">⚡</span><span class="tech-name">FastAPI</span><span class="tech-role">API framework</span></div>
+        <div class="tech-item"><span class="tech-icon">🍃</span><span class="tech-name">MongoDB</span><span class="tech-role">Database</span></div>
+        <div class="tech-item"><span class="tech-icon">🌐</span><span class="tech-name">HTML / CSS / JS</span><span class="tech-role">Frontend</span></div>
+      </div>
+    </div>
+
+    <div class="card about-card">
+      <h2>📊 Emission Data Sources</h2>
+      <div class="source-list">
+        <div class="source-item">
+          <div class="source-dot"></div>
+          <div><strong>IPCC</strong> — Intergovernmental Panel on Climate Change<p>Global transport emission guidelines used by researchers and governments worldwide</p></div>
+        </div>
+        <div class="source-item">
+          <div class="source-dot"></div>
+          <div><strong>EPA</strong> — U.S. Environmental Protection Agency<p>Greenhouse gas emission factors for vehicle types and fuel categories</p></div>
+        </div>
+        <div class="source-item">
+          <div class="source-dot"></div>
+          <div><strong>JRC</strong> — Joint Research Centre (European Commission)<p>Life cycle assessment data for electric vehicles and battery systems</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card about-card contact-card">
+      <h2>📬 Contact</h2>
+      <p style="color:var(--muted);margin-bottom:1.5rem">Have questions, suggestions, or want to collaborate? Reach out!</p>
+      <div class="contact-links">
+        <a class="contact-btn gmail" href="mailto:singhmanish040506@gmail.com">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          singhmanish040506@gmail.com
+        </a>
+        <a class="contact-btn github" href="https://github.com/imagamjns-anonymous" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          github.com/imagamjns-anonymous
+        </a>
+      </div>
+      <div class="made-at">
+        <div class="footer-flag-lg">
+          <span class="flag-stripe orange"></span>
+          <span class="flag-stripe white"><span class="ashoka">✦</span></span>
+          <span class="flag-stripe green"></span>
+        </div>
+        <div>
+          <div class="made-at-text">Made at</div>
+          <div class="made-at-name">DSEU Dwarka</div>
+          <div class="made-at-sub">Delhi Skill and Entrepreneurship University</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-flag">
+      <span class="flag-stripe orange"></span>
+      <span class="flag-stripe white"><span class="ashoka">✦</span></span>
+      <span class="flag-stripe green"></span>
+    </div>
+    <div class="footer-text">
+      <p class="made-by">Made by <strong>DSEU Dwarka</strong></p>
+      <p class="footer-sub">Emission data: IPCC · EPA · JRC</p>
+    </div>
+  </div>
+</footer>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
