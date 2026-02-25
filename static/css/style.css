@@ -370,15 +370,6 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
 /* ── Footer ────────────────────────────────────────── */
 footer { position: relative; z-index: 1; padding: 2rem 1.5rem; border-top: 1px solid var(--border); }
 .footer-inner { display: flex; align-items: center; justify-content: center; gap: 1.2rem; flex-wrap: wrap; }
-.footer-flag { display: flex; flex-direction: column; width: 38px; border-radius: 3px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.4); flex-shrink: 0; }
-.flag-stripe { height: 13px; display: flex; align-items: center; justify-content: center; }
-.flag-stripe.orange { background: #FF9933; }
-.flag-stripe.white  { background: #FFFFFF; }
-.flag-stripe.green  { background: #138808; }
-.ashoka { font-size: 9px; color: #000080; line-height: 1; }
-.footer-flag-lg { display: flex; flex-direction: column; width: 52px; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,.4); flex-shrink: 0; }
-.footer-flag-lg .flag-stripe { height: 18px; }
-.footer-flag-lg .ashoka { font-size: 12px; }
 .footer-text { text-align: center; }
 .made-by { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; color: var(--accent2); }
 .made-by strong { color: #fff; }
@@ -409,13 +400,13 @@ footer { position: relative; z-index: 1; padding: 2rem 1.5rem; border-top: 1px s
   .ch-name { width: 90px; }
 }
 .college-logo-lg {
-  width: 80px;
-  height: auto;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
 }
 
 .college-logo-sm {
-  width: 45px;
-  height: auto;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
 }
