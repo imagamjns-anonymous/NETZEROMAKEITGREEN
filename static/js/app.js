@@ -428,19 +428,54 @@ async function loadHistory() {
     const res  = await fetch('/api/history');
     const data = await res.json();
     if (!data.length) { list.innerHTML = '<div class="loading-text">No calculations yet. Try calculating something!</div>'; return; }
-    list.innerHTML = data.map(d => `
-      <div class="hist-item">
+
+    const clearBtn = `<div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
+      <button onclick="deleteAllHistory()" style="background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:.4rem 1rem;border-radius:8px;cursor:pointer;font-size:.8rem;font-family:inherit;">🗑️ Clear All</button>
+    </div>`;
+
+    list.innerHTML = clearBtn + data.map(d => `
+      <div class="hist-item" id="hist-${d._id}">
         <span class="hist-icon">${iconForType(d.vehicle_name)}</span>
         <div class="hist-info">
           <div class="hist-name">${d.vehicle_name}</div>
           <div class="hist-meta">${d.emission_mode?.toUpperCase()} · ${d.distance}km · ${d.frequency} · ${formatDate(d.timestamp)}</div>
         </div>
-        <div>
-          <div class="hist-co2">${d.annual_co2_kg?.toLocaleString()}</div>
-          <div class="hist-unit">kg CO₂/yr</div>
+        <div style="display:flex;align-items:center;gap:.75rem">
+          <div>
+            <div class="hist-co2">${d.annual_co2_kg?.toLocaleString()}</div>
+            <div class="hist-unit">kg CO₂/yr</div>
+          </div>
+          <button onclick="deleteHistory('${d._id}')" title="Delete" style="background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.25);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">🗑️</button>
         </div>
       </div>`).join('');
   } catch(e) { list.innerHTML = '<div class="loading-text">Could not load history.</div>'; }
+}
+
+async function deleteHistory(id) {
+  try {
+    const res = await fetch(`/api/history/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      const el = document.getElementById(`hist-${id}`);
+      if (el) { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(), 300); }
+      // check if list is now empty
+      setTimeout(() => {
+        const list = document.getElementById('historyList');
+        if (list && list.querySelectorAll('.hist-item').length === 0) {
+          list.innerHTML = '<div class="loading-text">No calculations yet. Try calculating something!</div>';
+        }
+      }, 400);
+    }
+  } catch(e) { alert('Could not delete entry.'); }
+}
+
+async function deleteAllHistory() {
+  if (!confirm('Delete all history? This cannot be undone.')) return;
+  try {
+    const res = await fetch('/api/history', { method: 'DELETE' });
+    if (res.ok) {
+      document.getElementById('historyList').innerHTML = '<div class="loading-text">No calculations yet. Try calculating something!</div>';
+    }
+  } catch(e) { alert('Could not clear history.'); }
 }
 
 function iconForType(name) {
