@@ -1,412 +1,476 @@
-/* ── Reset & Variables ─────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg:        #07100a;
-  --card:      #0e1a10;
-  --card2:     #122016;
-  --border:    rgba(0,210,130,0.13);
-  --accent:    #00d484;
-  --accent2:   #aaff6a;
-  --text:      #dff2e8;
-  --muted:     #5e8a6e;
-  --tailpipe:  #ef4444;
-  --lca:       #f97316;
-  --disp:      #a3e635;
-  --nav-h:     64px;
-}
-html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+'use strict';
 
-/* ── Blobs ─────────────────────────────────────────── */
-.bg-blobs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-.blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .15; animation: drift 14s ease-in-out infinite alternate; }
-.b1 { width: 540px; height: 540px; background: #00d484; top: -180px; left: -120px; }
-.b2 { width: 420px; height: 420px; background: #00602a; bottom: -120px; right: -120px; animation-duration: 18s; animation-direction: alternate-reverse; }
-.b3 { width: 320px; height: 320px; background: #aaff6a; top: 45%; left: 50%; transform: translateX(-50%); animation-duration: 11s; }
-@keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(35px,25px) scale(1.08); } }
-
-/* ── Navbar ────────────────────────────────────────── */
-.navbar {
-  position: sticky; top: 0; z-index: 100;
-  height: var(--nav-h);
-  background: rgba(7,16,10,.85);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 2rem;
-}
-.nav-logo {
-  font-family: 'Syne', sans-serif; font-size: 1.25rem;
-  font-weight: 800; color: var(--accent); letter-spacing: 2px;
-}
-.nav-links { display: flex; gap: .4rem; }
-.nav-btn {
-  display: flex; align-items: center; gap: .45rem;
-  padding: .5rem 1.1rem;
-  background: transparent; border: 1px solid transparent;
-  border-radius: 10px; color: var(--muted);
-  font-family: 'DM Sans', sans-serif; font-size: .88rem; font-weight: 500;
-  cursor: pointer; transition: all .2s;
-}
-.nav-btn svg { width: 16px; height: 16px; }
-.nav-btn:hover { background: var(--card2); border-color: var(--border); color: var(--text); }
-.nav-btn.active { background: rgba(0,212,132,.12); border-color: rgba(0,212,132,.35); color: var(--accent); font-weight: 700; }
-
-/* ── Page wrapper ──────────────────────────────────── */
-.page { position: relative; z-index: 1; animation: fadeUp .45s ease both; }
-@keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
-
-/* ── Page header (calculator / about) ─────────────── */
-.page-header { text-align: center; padding: 3.5rem 1.5rem 1.5rem; }
-.page-header h1 { font-family: 'Syne', sans-serif; font-size: 2.4rem; font-weight: 800; }
-.page-header .accent { color: var(--accent); }
-.page-sub { color: var(--muted); margin-top: .5rem; font-size: .95rem; }
-
-/* ── HERO ──────────────────────────────────────────── */
-.hero {
-  display: grid; grid-template-columns: 1fr 1fr;
-  align-items: center; gap: 3rem;
-  max-width: 1100px; margin: 0 auto;
-  padding: 5rem 2rem 3rem;
-}
-.hero-badge {
-  display: inline-block;
-  background: rgba(0,212,132,.12); border: 1px solid rgba(0,212,132,.3);
-  border-radius: 50px; padding: .35rem 1rem;
-  font-size: .8rem; font-weight: 600; color: var(--accent);
-  margin-bottom: 1.2rem; letter-spacing: 1px;
-}
-.hero-title {
-  font-family: 'Syne', sans-serif; font-size: 3.2rem;
-  font-weight: 800; line-height: 1.12; margin-bottom: 1.2rem;
-}
-.hero-title .accent { color: var(--accent); }
-.hero-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; margin-bottom: 2rem; max-width: 480px; }
-.hero-sub strong { color: var(--text); }
-.hero-cta {
-  display: inline-block;
-  background: var(--accent); color: #07100a;
-  font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
-  padding: .9rem 2rem; border-radius: 14px; border: none;
-  cursor: pointer; transition: all .2s;
-}
-.hero-cta:hover { background: var(--accent2); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,212,132,.3); }
-
-/* Earth animation */
-.hero-visual { display: flex; justify-content: center; align-items: center; }
-.earth-ring {
-  position: relative; width: 280px; height: 280px;
-  border: 1px dashed rgba(0,212,132,.2); border-radius: 50%;
-  animation: spin 18s linear infinite;
-}
-.earth {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%,-50%);
-  font-size: 5rem;
-  animation: counter-spin 18s linear infinite;
-  filter: drop-shadow(0 0 30px rgba(0,212,132,.35));
-}
-.orbit-dot {
-  position: absolute; font-size: 1.8rem;
-  animation: counter-spin 18s linear infinite;
-}
-.d1 { top: -18px; left: 50%; transform: translateX(-50%); }
-.d2 { bottom: -18px; left: 50%; transform: translateX(-50%); }
-.d3 { top: 50%; right: -18px; transform: translateY(-50%); }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes counter-spin { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
-
-/* ── Stats strip ───────────────────────────────────── */
-.stats-strip {
-  display: flex; justify-content: center; align-items: center;
-  gap: 0; background: var(--card);
-  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-  padding: 1.8rem 2rem; flex-wrap: wrap;
-}
-.stat-item { text-align: center; padding: .5rem 2.5rem; }
-.stat-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent2); }
-.stat-lbl { font-size: .75rem; color: var(--muted); margin-top: .2rem; }
-.stat-div { width: 1px; height: 40px; background: var(--border); }
-
-/* ── Info section ──────────────────────────────────── */
-.info-section { max-width: 1100px; margin: 0 auto; padding: 5rem 2rem 3rem; }
-.section-title { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
-.section-title .accent { color: var(--accent); }
-.section-para { color: var(--muted); line-height: 1.8; font-size: .95rem; max-width: 700px; margin-bottom: 2.5rem; }
-
-.info-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; }
-.info-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 18px; padding: 1.8rem;
-  transition: transform .2s, border-color .2s;
-}
-.info-card:hover { transform: translateY(-4px); border-color: rgba(0,212,132,.3); }
-.ic-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; }
-.info-card h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: .6rem; }
-.info-card p { font-size: .85rem; color: var(--muted); line-height: 1.7; }
-
-/* ── Why section ───────────────────────────────────── */
-.why-section { max-width: 1100px; margin: 0 auto; padding: 2rem 2rem 5rem; }
-.why-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; margin: 2rem 0; }
-.why-item {
-  display: flex; gap: 1rem; align-items: flex-start;
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 1.3rem;
-}
-.why-icon { font-size: 2rem; flex-shrink: 0; }
-.why-item strong { display: block; font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 700; margin-bottom: .3rem; }
-.why-item p { font-size: .82rem; color: var(--muted); line-height: 1.6; }
-.cta-center { text-align: center; margin-top: 2rem; }
-
-/* ── Card ──────────────────────────────────────────── */
-.card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 22px; padding: 2.5rem;
-}
-.result-card { animation: fadeUp .45s ease both; animation-delay: .1s; }
-
-/* ── Calculator wrap ───────────────────────────────── */
-.calc-wrap { max-width: 880px; margin: 0 auto; padding: 1rem 1.5rem 5rem; display: flex; flex-direction: column; gap: 2rem; }
-
-/* ── Form elements ─────────────────────────────────── */
-.form-group { margin-bottom: 1.7rem; }
-.section-label { display: block; font-size: .72rem; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); margin-bottom: .75rem; }
-.section-label em { font-style: normal; }
-
-.em-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .7rem; margin-bottom: .9rem; }
-.em-btn { display: flex; align-items: center; gap: .75rem; padding: 1rem; background: var(--card2); border: 1px solid var(--border); border-radius: 14px; color: var(--muted); font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all .2s; text-align: left; }
-.em-btn:hover { border-color: var(--accent); color: var(--text); }
-.em-btn.active { border-color: var(--accent); background: rgba(0,212,132,.1); }
-.em-icon-wrap { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
-.tailpipe-col { background: rgba(239,68,68,.18); }
-.lca-col      { background: rgba(249,115,22,.18); }
-.disp-col     { background: rgba(163,230,53,.18); }
-.em-text { display: flex; flex-direction: column; gap: .18rem; }
-.em-name { font-family: 'Syne', sans-serif; font-size: .88rem; font-weight: 700; color: var(--text); }
-.em-sub  { font-size: .68rem; color: var(--muted); line-height: 1.35; }
-.em-info-box { background: rgba(0,212,132,.06); border: 1px solid rgba(0,212,132,.15); border-radius: 10px; padding: .75rem 1rem; font-size: .82rem; color: var(--muted); line-height: 1.65; min-height: 2.8rem; }
-.em-info-box strong { color: var(--accent2); }
-
-.mode-tabs { display: flex; gap: .4rem; background: var(--card2); border-radius: 12px; padding: .4rem; margin-bottom: 2rem; }
-.mode-tab { flex: 1; padding: .65rem 1rem; background: transparent; border: none; border-radius: 9px; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: .85rem; font-weight: 500; cursor: pointer; transition: all .2s; }
-.mode-tab.active { background: var(--accent); color: #07100a; font-weight: 700; }
-
-.search-box { position: relative; margin-bottom: .75rem; }
-.search-box input { width: 100%; padding: .8rem 1rem .8rem 2.8rem; background: var(--card2); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: .95rem; outline: none; transition: border-color .2s; }
-.search-box input:focus { border-color: var(--accent); }
-.s-icon { position: absolute; left: .9rem; top: 50%; transform: translateY(-50%); font-size: .95rem; }
-
-.type-chips { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: .8rem; }
-.chip { padding: .28rem .75rem; background: var(--card2); border: 1px solid var(--border); border-radius: 50px; color: var(--muted); font-size: .75rem; cursor: pointer; transition: all .18s; }
-.chip:hover { border-color: var(--accent); color: var(--text); }
-.chip.active { background: rgba(0,212,132,.15); border-color: var(--accent); color: var(--accent); }
-
-.vlist { max-height: 210px; overflow-y: auto; background: var(--card2); border: 1px solid var(--border); border-radius: 12px; display: none; }
-.vlist.open { display: block; }
-.vlist::-webkit-scrollbar { width: 4px; }
-.vlist::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-.vitem { display: flex; align-items: center; gap: .8rem; padding: .7rem 1rem; cursor: pointer; border-bottom: 1px solid var(--border); transition: background .15s; }
-.vitem:last-child { border-bottom: none; }
-.vitem:hover { background: rgba(0,212,132,.07); }
-.vi-icon { font-size: 1.3rem; }
-.vi-name { font-size: .88rem; font-weight: 500; }
-.vi-type { font-size: .7rem; color: var(--muted); }
-.vi-right { margin-left: auto; text-align: right; }
-.vi-tp   { font-size: .7rem; color: var(--tailpipe); }
-.vi-lca  { font-size: .7rem; color: var(--lca); }
-.vi-disp { font-size: .7rem; color: var(--disp); }
-
-.v-selected { display: flex; align-items: center; gap: .8rem; background: rgba(0,212,132,.09); border: 1px solid rgba(0,212,132,.28); border-radius: 12px; padding: .8rem 1.1rem; }
-.vs-icon { font-size: 1.5rem; }
-.vs-info { flex: 1; }
-.vs-name { font-weight: 600; font-size: .95rem; }
-.vs-factors { font-size: .72rem; color: var(--muted); margin-top: .15rem; }
-.vs-factors span { margin-right: .6rem; }
-.vs-factors .tp  { color: var(--tailpipe); }
-.vs-factors .lca { color: var(--lca); }
-.vs-factors .dp  { color: var(--disp); }
-.vs-change { font-size: .75rem; color: var(--accent); cursor: pointer; white-space: nowrap; }
-
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-.num-wrap { position: relative; }
-input[type="number"] { width: 100%; padding: .85rem 2.8rem .85rem 1.1rem; background: var(--card2); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 1.05rem; outline: none; transition: border-color .2s; }
-input[type="number"]:focus { border-color: var(--accent); }
-input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
-.num-icon { position: absolute; right: .9rem; top: 50%; transform: translateY(-50%); }
-.slider { width: 100%; margin-top: .7rem; -webkit-appearance: none; height: 4px; background: var(--card2); border-radius: 2px; outline: none; }
-.slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 2px solid var(--bg); box-shadow: 0 0 8px var(--accent); }
-
-.pill-group { display: flex; gap: .4rem; flex-wrap: wrap; }
-.pill { padding: .45rem 1rem; background: var(--card2); border: 1px solid var(--border); border-radius: 50px; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: .82rem; cursor: pointer; transition: all .18s; }
-.pill:hover { border-color: var(--accent); color: var(--text); }
-.pill.active { background: var(--accent); border-color: var(--accent); color: #07100a; font-weight: 600; }
-
-.go-btn { width: 100%; padding: 1.05rem 2rem; margin-top: .4rem; background: var(--accent); border: none; border-radius: 14px; color: #07100a; font-family: 'Syne', sans-serif; font-size: 1.08rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all .2s; }
-.go-btn:hover { background: var(--accent2); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,212,132,.28); }
-.go-btn span { font-size: 1.2rem; }
-
-.cmp-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: start; }
-.cmp-col { display: flex; flex-direction: column; }
-.vs-badge { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--accent); align-self: center; padding-top: 2rem; }
-
-.history-list { display: flex; flex-direction: column; gap: .65rem; }
-.hist-item { display: flex; align-items: center; gap: 1rem; background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: .85rem 1.1rem; }
-.hist-icon { font-size: 1.4rem; }
-.hist-info { flex: 1; }
-.hist-name { font-size: .9rem; font-weight: 600; }
-.hist-meta { font-size: .72rem; color: var(--muted); margin-top: .15rem; }
-.hist-co2  { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--accent2); }
-.hist-unit { font-size: .7rem; color: var(--muted); }
-.loading-text { color: var(--muted); font-size: .9rem; padding: 1rem; text-align: center; }
-
-.res-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: .6rem; flex-wrap: wrap; }
-.res-meta { font-size: .82rem; color: var(--muted); margin-top: .3rem; }
-.em-tag { padding: .3rem .9rem; border-radius: 50px; font-size: .75rem; font-weight: 700; background: rgba(170,255,106,.12); border: 1px solid rgba(170,255,106,.28); color: var(--accent2); }
-.rating-pill { padding: .38rem 1rem; border-radius: 50px; font-family: 'Syne', sans-serif; font-size: .85rem; font-weight: 700; white-space: nowrap; }
-
-.big-co2 { text-align: center; padding: 2rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 1.8rem; }
-.co2-num { display: block; font-family: 'Syne', sans-serif; font-size: 4.2rem; font-weight: 800; color: var(--accent); line-height: 1; }
-.co2-unit { font-size: .88rem; color: var(--muted); margin-top: .3rem; display: block; }
-
-.breakdown-panel { background: var(--card2); border: 1px solid var(--border); border-radius: 16px; padding: 1.3rem 1.5rem; margin-bottom: 1.8rem; }
-.bp-title { font-size: .72rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 1.1rem; }
-.bp-row { display: flex; align-items: center; gap: .9rem; margin-bottom: .7rem; }
-.bp-row:last-child { margin-bottom: 0; }
-.bp-label { width: 100px; font-size: .75rem; color: var(--muted); text-align: right; flex-shrink: 0; }
-.bp-track { flex: 1; height: 20px; background: var(--bg); border-radius: 6px; overflow: hidden; }
-.bp-fill  { height: 100%; border-radius: 6px; transition: width .9s cubic-bezier(.34,1.56,.64,1); }
-.bp-fill.tp   { background: linear-gradient(90deg,#ef4444,#f97316); }
-.bp-fill.lca  { background: linear-gradient(90deg,#f97316,#fbbf24); }
-.bp-fill.disp { background: linear-gradient(90deg,#a3e635,#00d484); }
-.bp-val { width: 80px; font-size: .78rem; font-weight: 600; }
-.bp-active-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--accent); border: 2px solid var(--accent); }
-.bp-inactive-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; border: 2px solid var(--muted); background: transparent; }
-
-.tiles { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 1.8rem; }
-.tile { background: var(--card2); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem; text-align: center; }
-.tile-val { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--accent2); }
-.tile-lbl { font-size: .7rem; color: var(--muted); margin-top: .3rem; text-transform: uppercase; letter-spacing: .5px; }
-
-.global-cmp { margin-bottom: 1.8rem; }
-.gc-label { display: flex; justify-content: space-between; font-size: .78rem; color: var(--muted); margin-bottom: .5rem; }
-.gc-pct { font-weight: 700; color: var(--text); }
-.bar-track { position: relative; height: 10px; background: var(--card2); border-radius: 5px; overflow: visible; }
-.bar-fill { height: 100%; border-radius: 5px; transition: width 1s cubic-bezier(.34,1.56,.64,1); max-width: 100%; }
-.avg-line  { position: absolute; left: 47%; top: -4px; width: 2px; height: 18px; background: var(--muted); border-radius: 1px; }
-.gc-scale  { display: flex; justify-content: space-between; font-size: .7rem; color: var(--muted); margin-top: .4rem; }
-.tip-box { background: rgba(0,212,132,.07); border: 1px solid rgba(0,212,132,.18); border-radius: 14px; padding: 1.1rem 1.3rem; font-size: .88rem; line-height: 1.7; }
-.tip-box strong { color: var(--accent2); }
-
-.side-by-side { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: stretch; }
-.sbs-box { background: var(--card2); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; text-align: center; transition: border-color .3s, box-shadow .3s; }
-.sbs-box.winner { border-color: var(--accent); box-shadow: 0 0 24px rgba(0,212,132,.14); }
-.sbs-box.loser  { opacity: .6; }
-.sbs-name  { font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 700; margin-bottom: .8rem; }
-.sbs-co2   { font-family: 'Syne', sans-serif; font-size: 2.3rem; font-weight: 800; color: var(--accent); line-height: 1; }
-.sbs-unit  { font-size: .7rem; color: var(--muted); margin-bottom: .8rem; display: block; }
-.sbs-rating{ display: inline-block; padding: .22rem .8rem; border-radius: 50px; font-size: .75rem; font-weight: 700; margin-bottom: .6rem; }
-.sbs-trees { font-size: .78rem; color: var(--muted); }
-.sbs-divider { display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--accent); writing-mode: vertical-rl; letter-spacing: 2px; }
-
-.cbt-title { font-size: .72rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
-.cbt-row { display: grid; grid-template-columns: 100px 1fr 1fr; gap: .6rem; align-items: center; margin-bottom: .5rem; font-size: .82rem; }
-.cbt-row.header { font-size: .72rem; color: var(--muted); font-weight: 600; }
-.cbt-label { color: var(--muted); text-align: right; }
-.cbt-cell  { display: flex; align-items: center; gap: .45rem; }
-.dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-.dot.tp   { background: var(--tailpipe); }
-.dot.lca  { background: var(--lca); }
-.dot.disp { background: var(--disp); }
-
-.chart-section { margin: 1.5rem 0; display: flex; flex-direction: column; gap: .8rem; }
-.ch-row { display: flex; align-items: center; gap: .8rem; }
-.ch-name { width: 140px; font-size: .78rem; color: var(--muted); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ch-track { flex: 1; height: 26px; background: var(--card2); border-radius: 7px; overflow: hidden; }
-.ch-fill  { height: 100%; border-radius: 7px; transition: width 1s cubic-bezier(.34,1.56,.64,1); }
-.ch-fill.a { background: linear-gradient(90deg,#00d484,#aaff6a); }
-.ch-fill.b { background: linear-gradient(90deg,#f97316,#ef4444); }
-.ch-val { width: 85px; font-family: 'Syne', sans-serif; font-size: .82rem; font-weight: 700; }
-.verdict-box { background: rgba(0,212,132,.07); border: 1px solid rgba(0,212,132,.18); border-radius: 14px; padding: 1.2rem 1.4rem; font-size: .9rem; line-height: 1.75; text-align: center; }
-.verdict-box strong { color: var(--accent2); }
-
-/* ── About page ────────────────────────────────────── */
-.about-wrap { max-width: 800px; margin: 0 auto; padding: 1rem 1.5rem 5rem; display: flex; flex-direction: column; gap: 1.5rem; }
-.about-card { }
-.about-icon-big { font-size: 3rem; margin-bottom: 1rem; }
-.about-card h2 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 1rem; }
-.about-card p { color: var(--muted); line-height: 1.75; font-size: .92rem; }
-
-.tech-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: .8rem; }
-.tech-item { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: .35rem; }
-.tech-icon { font-size: 1.6rem; }
-.tech-name { font-family: 'Syne', sans-serif; font-size: .82rem; font-weight: 700; }
-.tech-role { font-size: .68rem; color: var(--muted); }
-
-.source-list { display: flex; flex-direction: column; gap: 1rem; }
-.source-item { display: flex; gap: 1rem; align-items: flex-start; }
-.source-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: .35rem; }
-.source-item strong { display: block; font-size: .92rem; margin-bottom: .2rem; }
-.source-item p { font-size: .8rem; color: var(--muted); }
-
-.contact-card h2 { margin-bottom: .5rem; }
-.contact-links { display: flex; flex-direction: column; gap: .8rem; margin-bottom: 2rem; }
-.contact-btn {
-  display: flex; align-items: center; gap: .75rem;
-  padding: .9rem 1.3rem; border-radius: 12px;
-  font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600;
-  text-decoration: none; transition: all .2s;
-}
-.contact-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
-.contact-btn.gmail { background: rgba(234,67,53,.1); border: 1px solid rgba(234,67,53,.3); color: #ea4335; }
-.contact-btn.gmail:hover { background: rgba(234,67,53,.18); transform: translateX(4px); }
-.contact-btn.github { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.15); color: #ccc; }
-.contact-btn.github:hover { background: rgba(255,255,255,.1); transform: translateX(4px); }
-
-.made-at { display: flex; align-items: center; gap: 1.2rem; padding: 1.2rem; background: var(--card2); border: 1px solid var(--border); border-radius: 14px; }
-.made-at-text { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-.made-at-name { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--accent2); }
-.made-at-sub  { font-size: .75rem; color: var(--muted); }
-
-/* ── Footer ────────────────────────────────────────── */
-footer { position: relative; z-index: 1; padding: 2rem 1.5rem; border-top: 1px solid var(--border); }
-.footer-inner { display: flex; align-items: center; justify-content: center; gap: 1.2rem; flex-wrap: wrap; }
-.footer-text { text-align: center; }
-.made-by { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; color: var(--accent2); }
-.made-by strong { color: #fff; }
-.footer-sub { font-size: .72rem; color: var(--muted); margin-top: .25rem; }
-
-/* ── Responsive ────────────────────────────────────── */
-@media (max-width: 768px) {
-  .hero { grid-template-columns: 1fr; padding: 3rem 1.5rem 2rem; text-align: center; }
-  .hero-visual { display: none; }
-  .hero-title { font-size: 2.3rem; }
-  .info-cards { grid-template-columns: 1fr; }
-  .why-grid { grid-template-columns: 1fr; }
-  .tech-grid { grid-template-columns: repeat(2,1fr); }
-  .em-grid { grid-template-columns: 1fr; }
-  .two-col { grid-template-columns: 1fr; }
-  .cmp-grid { grid-template-columns: 1fr; }
-  .vs-badge { writing-mode: horizontal-tb; padding: 0; text-align: center; }
-  .side-by-side { grid-template-columns: 1fr; }
-  .sbs-divider { writing-mode: horizontal-tb; }
-  .tiles { grid-template-columns: repeat(2,1fr); }
-  .card { padding: 1.5rem; }
-  .co2-num { font-size: 3.2rem; }
-  .stats-strip { gap: 0; }
-  .stat-item { padding: .5rem 1rem; }
-  .stat-div { display: none; }
-  .nav-btn span:not(svg) { display: none; }
-  .nav-btn { padding: .5rem .8rem; }
-  .ch-name { width: 90px; }
-}
-.college-logo-lg {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
+// ── Page Navigation ──────────────────────────────────────────────
+function goPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const target = document.getElementById('page-' + page);
+  if (target) target.style.display = 'block';
+  const btn = document.querySelector(`.nav-btn[data-page="${page}"]`);
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0, 0);
 }
 
-.college-logo-sm {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => goPage(btn.dataset.page));
+});
+
+// Show home page on load
+goPage('home');
+
+
+// ── State ────────────────────────────────────────────────────────
+const state = {
+  vehicles:      {},
+  selectedId:    null,
+  selectedIdA:   null,
+  selectedIdB:   null,
+  emMode:        'tailpipe',
+  appMode:       'single',
+  typeFilter:    'All',
+  freq:          'daily',
+  freqC:         'daily',
+};
+
+// ── Emission mode info ───────────────────────────────────────────
+const EM_INFO = {
+  tailpipe:   '<strong>🏭 Tailpipe:</strong> Only the CO₂ released directly from your exhaust while driving. For EVs this is zero — but it ignores how electricity or fuel is produced upstream.',
+  lca:        '<strong>🔄 LCA (Life Cycle Assessment):</strong> The complete picture — CO₂ from manufacturing the vehicle, producing fuel/electricity, all driving over its lifetime, and final disposal. This is the most accurate real-world measure.',
+  disposable: '<strong>♻️ Disposable / End-of-Life:</strong> Emissions specifically from scrapping, shredding metals, and recycling components (especially lithium-ion battery packs). EVs score higher here due to battery complexity.',
+};
+
+const TIPS = {
+  Petrol:     ['🚗 Carpooling cuts your per-trip footprint in half instantly.','⚡ Switching to an EV eliminates tailpipe emissions entirely.','🔧 Keeping tyre pressure correct improves fuel efficiency by up to 3%.'],
+  Diesel:     ['🌿 Diesel hybrids offer a practical middle ground for long trips.','🛣️ Smooth acceleration and braking cuts fuel consumption significantly.','🚌 For city commutes, public transit can be 5× more efficient per passenger.'],
+  Electric:   ['🌞 Charging from solar or renewables makes your LCA emissions near-zero.','⚡ Zero tailpipe emissions — great for urban air quality.','♻️ Ask your manufacturer about battery take-back and recycling programmes.'],
+  Hybrid:     ['🏙️ Hybrids shine in stop-and-go city traffic — you\'re making a smart choice.','🔋 Plug-in hybrids can run purely on electric for typical daily commutes.','🌱 Your LCA emissions are already well below the average petrol car.'],
+  Motorcycle: ['🚲 For very short trips, a bicycle produces zero emissions.','🔌 Electric motorcycles are now affordable and practical for city use.','🏍️ Motorcycles are lighter — but check your model\'s real-world emissions data.'],
+  SUV:        ['🚙 Large SUVs are among the highest emitters across all three measures.','⚡ Electric SUVs like Tesla Model Y or Hyundai Ioniq 6 are now widely available.','🗓️ Combining errands into fewer trips significantly reduces annual emissions.'],
+  Public:     ['🚌 Excellent choice — public transit emits far less per passenger than any car.','🚶 Walking the last mile keeps your footprint at its absolute minimum.','📱 Transit apps help you plan efficient routes with minimal waiting.'],
+};
+
+// ── Init ─────────────────────────────────────────────────────────
+async function init() {
+  updateEmInfo();
+  setupEmButtons();
+  setupModeTabs();
+  setupFreqButtons('freqGroup', (v) => { state.freq = v; });
+  setupFreqButtons('freqGroupC', (v) => { state.freqC = v; });
+  syncSlider('distance', 'distSlider');
+  syncSlider('distanceC', 'distSliderC');
+  document.getElementById('calcBtn').addEventListener('click', doCalculate);
+  document.getElementById('compareBtn').addEventListener('click', doCompare);
+
+  await loadVehicles();
 }
+
+// ── Load vehicles from API ───────────────────────────────────────
+async function loadVehicles() {
+  try {
+    const res = await fetch('/api/vehicles');
+    state.vehicles = await res.json();
+    buildTypeChips();
+    setupSearch('vehicleSearch', 'vehicleList', 'vSelected', (id) => { state.selectedId = id; });
+    setupSearch('searchA', 'listA', 'selA', (id) => { state.selectedIdA = id; });
+    setupSearch('searchB', 'listB', 'selB', (id) => { state.selectedIdB = id; });
+  } catch(e) {
+    console.error('Failed to load vehicles:', e);
+  }
+}
+
+// ── Emission mode buttons ────────────────────────────────────────
+function setupEmButtons() {
+  document.querySelectorAll('.em-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.em-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.emMode = btn.dataset.mode;
+      updateEmInfo();
+    });
+  });
+}
+
+function updateEmInfo() {
+  document.getElementById('emInfoBox').innerHTML = EM_INFO[state.emMode] || '';
+}
+
+// ── Mode tabs ────────────────────────────────────────────────────
+function setupModeTabs() {
+  document.querySelectorAll('.mode-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      state.appMode = tab.dataset.mode;
+      document.getElementById('singleMode').style.display  = state.appMode === 'single'  ? 'block' : 'none';
+      document.getElementById('compareMode').style.display = state.appMode === 'compare' ? 'block' : 'none';
+      document.getElementById('historyMode').style.display = state.appMode === 'history' ? 'block' : 'none';
+      document.getElementById('resultsCard').style.display        = 'none';
+      document.getElementById('compareResultsCard').style.display = 'none';
+      if (state.appMode === 'history') loadHistory();
+    });
+  });
+}
+
+// ── Frequency buttons ────────────────────────────────────────────
+function setupFreqButtons(groupId, onChange) {
+  document.querySelectorAll(`#${groupId} .pill`).forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll(`#${groupId} .pill`).forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      onChange(btn.dataset.val);
+    });
+  });
+}
+
+// ── Slider <-> input sync ────────────────────────────────────────
+function syncSlider(inputId, sliderId) {
+  const inp = document.getElementById(inputId);
+  const sld = document.getElementById(sliderId);
+  sld.addEventListener('input', () => { inp.value = sld.value; });
+  inp.addEventListener('input', () => { sld.value = Math.min(Math.max(+inp.value, 1), 500); });
+}
+
+// ── Type filter chips ────────────────────────────────────────────
+function buildTypeChips() {
+  const container = document.getElementById('typeChips');
+  const types = ['All', ...new Set(Object.values(state.vehicles).map(v => v.type))];
+  container.innerHTML = types.map(t =>
+    `<button class="chip${t==='All'?' active':''}" data-type="${t}">${t}</button>`
+  ).join('');
+  container.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      state.typeFilter = chip.dataset.type;
+      renderList('vehicleList', document.getElementById('vehicleSearch').value);
+    });
+  });
+}
+
+// ── Vehicle search setup ─────────────────────────────────────────
+function setupSearch(inputId, listId, selectedId, onSelect) {
+  const inp  = document.getElementById(inputId);
+  const list = document.getElementById(listId);
+
+  list._onSelect = (id) => {
+    onSelect(id);
+    showSelected(selectedId, listId, inputId, id);
+  };
+
+  inp.addEventListener('focus', () => renderList(listId, inp.value));
+  inp.addEventListener('input', () => renderList(listId, inp.value));
+  document.addEventListener('click', (e) => {
+    if (!inp.contains(e.target) && !list.contains(e.target)) list.classList.remove('open');
+  });
+}
+
+function renderList(listId, query = '') {
+  const list = document.getElementById(listId);
+  const q = query.toLowerCase();
+  list.innerHTML = '';
+
+  const filtered = Object.entries(state.vehicles).filter(([, v]) => {
+    const matchType = state.typeFilter === 'All' || v.type === state.typeFilter;
+    const matchQ    = !q || v.name.toLowerCase().includes(q) || v.type.toLowerCase().includes(q);
+    return matchType && matchQ;
+  });
+
+  if (!filtered.length) {
+    list.innerHTML = `<div style="padding:1rem;text-align:center;color:var(--muted);font-size:.85rem;">No vehicles found</div>`;
+  } else {
+    filtered.forEach(([id, v]) => {
+      const item = document.createElement('div');
+      item.className = 'vitem';
+      item.innerHTML = `
+        <span class="vi-icon">${v.icon}</span>
+        <div>
+          <div class="vi-name">${v.name}</div>
+          <div class="vi-type">${v.type}</div>
+        </div>
+        <div class="vi-right">
+          <div class="vi-tp">🏭 ${v.tailpipe} kg/km</div>
+          <div class="vi-lca">🔄 ${v.lca} kg/km</div>
+          <div class="vi-disp">♻️ ${v.disposable} kg/km</div>
+        </div>`;
+      item.addEventListener('click', () => { if (list._onSelect) list._onSelect(id); });
+      list.appendChild(item);
+    });
+  }
+  list.classList.add('open');
+}
+
+function showSelected(selectedId, listId, inputId, vehicleId) {
+  const v   = state.vehicles[vehicleId];
+  const el  = document.getElementById(selectedId);
+  if (!v || !el) return;
+  el.style.display = 'flex';
+  el.innerHTML = `
+    <span class="vs-icon">${v.icon}</span>
+    <div class="vs-info">
+      <div class="vs-name">${v.name}</div>
+      <div class="vs-factors">
+        <span class="tp">🏭 Tailpipe: ${v.tailpipe}</span>
+        <span class="lca">🔄 LCA: ${v.lca}</span>
+        <span class="dp">♻️ Disp: ${v.disposable} kg/km</span>
+      </div>
+    </div>
+    <span class="vs-change">Change ✎</span>`;
+  document.getElementById(listId).classList.remove('open');
+  document.getElementById(inputId).value = '';
+
+  el.querySelector('.vs-change').addEventListener('click', () => {
+    el.style.display = 'none';
+    if (selectedId === 'vSelected') state.selectedId  = null;
+    if (selectedId === 'selA')      state.selectedIdA = null;
+    if (selectedId === 'selB')      state.selectedIdB = null;
+    document.getElementById(inputId).focus();
+    renderList(listId, '');
+  });
+}
+
+// ── Calculate ────────────────────────────────────────────────────
+async function doCalculate() {
+  if (!state.selectedId)  { alert('Please select a vehicle.'); return; }
+  const dist = parseFloat(document.getElementById('distance').value);
+  if (!dist || dist <= 0) { alert('Please enter a valid distance.'); return; }
+
+  try {
+    const res = await fetch('/api/calculate', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ vehicle_id: state.selectedId, distance: dist, frequency: state.freq, emission_mode: state.emMode }),
+    });
+    const data = await res.json();
+    showResults(data);
+  } catch(e) { alert('Server error. Is the backend running?'); }
+}
+
+// ── Compare ──────────────────────────────────────────────────────
+async function doCompare() {
+  if (!state.selectedIdA || !state.selectedIdB) { alert('Please select both vehicles.'); return; }
+  if (state.selectedIdA === state.selectedIdB)  { alert('Please pick two different vehicles.'); return; }
+  const dist = parseFloat(document.getElementById('distanceC').value);
+  if (!dist || dist <= 0) { alert('Please enter a valid distance.'); return; }
+
+  try {
+    const res = await fetch('/api/compare', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ vehicle1: state.selectedIdA, vehicle2: state.selectedIdB, distance: dist, frequency: state.freqC, emission_mode: state.emMode }),
+    });
+    const data = await res.json();
+    showCompareResults(data);
+  } catch(e) { alert('Server error. Is the backend running?'); }
+}
+
+// ── Show single results ──────────────────────────────────────────
+function showResults(d) {
+  const card = document.getElementById('resultsCard');
+  card.style.display = 'block';
+  document.getElementById('compareResultsCard').style.display = 'none';
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Header
+  document.getElementById('resVehicleName').textContent = `${d.vehicle_icon} ${d.vehicle_name}`;
+  document.getElementById('resMeta').textContent = `${d.vehicle_type} · ${d.emission_mode.toUpperCase()} mode · ${d.factor_used} kg CO₂/km`;
+
+  // Rating
+  const pill = document.getElementById('ratingPill');
+  pill.textContent = d.rating;
+  pill.style.cssText = `background:${d.rating_color}22;color:${d.rating_color};border:1px solid ${d.rating_color}55;padding:.38rem 1rem;border-radius:50px;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;`;
+
+  // Big number (animated)
+  animateNum('co2Num', d.annual_co2_kg);
+
+  // Breakdown bars (all 3 measures always shown)
+  renderBreakdown('bpRows', d);
+
+  // Tiles
+  document.getElementById('tMonthly').textContent  = d.monthly_co2_kg.toLocaleString();
+  document.getElementById('tDistance').textContent  = d.annual_distance.toLocaleString();
+  document.getElementById('tTrees').textContent     = d.trees_needed.toLocaleString();
+
+  // Global bar
+  const pct = Math.min((d.annual_co2_kg / 10000) * 100, 100);
+  const bar  = document.getElementById('globalBar');
+  bar.style.width      = pct + '%';
+  bar.style.background = d.annual_co2_kg < 500  ? 'linear-gradient(90deg,#00d484,#aaff6a)'
+                       : d.annual_co2_kg < 3000 ? 'linear-gradient(90deg,#fbbf24,#f97316)'
+                       :                          'linear-gradient(90deg,#f97316,#ef4444)';
+  document.getElementById('gcPct').textContent = d.vs_global_pct + '% of global avg';
+
+  // Tip
+  const tips = TIPS[d.vehicle_type] || [];
+  document.getElementById('tipBox').innerHTML = `<strong>💡 Tip:</strong> ${tips[Math.floor(Math.random()*tips.length)] || ''}`;
+}
+
+function renderBreakdown(containerId, d) {
+  const container = document.getElementById(containerId);
+  const rows = [
+    { label:'🏭 Tailpipe',  key:'tailpipe_factor',   cls:'tp',   factor: d.tailpipe_factor },
+    { label:'🔄 LCA',       key:'lca_factor',        cls:'lca',  factor: d.lca_factor },
+    { label:'♻️ Disposal',  key:'disposable_factor', cls:'disp', factor: d.disposable_factor },
+  ];
+  const maxVal = Math.max(d.tailpipe_factor, d.lca_factor, d.disposable_factor) || 1;
+  const activeMode = d.emission_mode === 'tailpipe' ? 'tp' : d.emission_mode === 'lca' ? 'lca' : 'disp';
+
+  container.innerHTML = rows.map(r => {
+    const pct = ((r.factor / maxVal) * 100).toFixed(1);
+    const isActive = r.cls === activeMode;
+    return `
+      <div class="bp-row">
+        <span class="bp-label">${r.label}</span>
+        <div class="bp-track">
+          <div class="bp-fill ${r.cls}" style="width:0%" data-w="${pct}"></div>
+        </div>
+        <span class="bp-val">${r.factor} kg/km</span>
+        <div class="${isActive ? 'bp-active-dot' : 'bp-inactive-dot'}" title="${isActive?'Currently selected mode':''}"></div>
+      </div>`;
+  }).join('');
+
+  // Animate bars
+  setTimeout(() => {
+    container.querySelectorAll('.bp-fill').forEach(el => { el.style.width = el.dataset.w + '%'; });
+  }, 80);
+}
+
+// ── Show compare results ─────────────────────────────────────────
+function showCompareResults(data) {
+  const card = document.getElementById('compareResultsCard');
+  card.style.display = 'block';
+  document.getElementById('resultsCard').style.display = 'none';
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  document.getElementById('cmpEmTag').textContent = state.emMode.toUpperCase() + ' emissions';
+
+  const v1 = data.vehicle1, v2 = data.vehicle2;
+  const aWins = data.greener === state.selectedIdA;
+
+  // Side-by-side boxes
+  const sbs = document.getElementById('sideBySide');
+  sbs.innerHTML = `
+    ${sbsBox('A', v1, aWins  ? 'winner' : 'loser')}
+    <div class="sbs-divider">${aWins ? '← GREENER' : 'GREENER →'}</div>
+    ${sbsBox('B', v2, !aWins ? 'winner' : 'loser')}
+  `;
+
+  // Breakdown comparison
+  const vA = state.vehicles[state.selectedIdA];
+  const vB = state.vehicles[state.selectedIdB];
+  document.getElementById('cmpBreakdown').innerHTML = `
+    <div class="cbt-title">Full Emission Breakdown — per km driven</div>
+    <div class="cbt-row header">
+      <div class="cbt-label">Type</div>
+      <div>${vA ? vA.name : 'Vehicle A'}</div>
+      <div>${vB ? vB.name : 'Vehicle B'}</div>
+    </div>
+    ${[
+      {label:'🏭 Tailpipe', k:'tailpipe', cls:'tp'},
+      {label:'🔄 LCA',      k:'lca',      cls:'lca'},
+      {label:'♻️ Disposal', k:'disposable',cls:'disp'},
+    ].map(r => `
+      <div class="cbt-row">
+        <div class="cbt-label">${r.label}</div>
+        <div class="cbt-cell"><span class="dot ${r.cls}"></span>${vA?vA[r.k]:'-'} kg/km</div>
+        <div class="cbt-cell"><span class="dot ${r.cls}"></span>${vB?vB[r.k]:'-'} kg/km</div>
+      </div>`).join('')}
+  `;
+
+  // Bar chart
+  const maxV = Math.max(v1.annual_co2_kg, v2.annual_co2_kg) || 1;
+  document.getElementById('chartSection').innerHTML = `
+    <div class="ch-row">
+      <span class="ch-name">${v1.vehicle_name}</span>
+      <div class="ch-track"><div class="ch-fill a" id="chA" style="width:0%"></div></div>
+      <span class="ch-val">${v1.annual_co2_kg.toLocaleString()} kg</span>
+    </div>
+    <div class="ch-row">
+      <span class="ch-name">${v2.vehicle_name}</span>
+      <div class="ch-track"><div class="ch-fill b" id="chB" style="width:0%"></div></div>
+      <span class="ch-val">${v2.annual_co2_kg.toLocaleString()} kg</span>
+    </div>
+  `;
+  setTimeout(() => {
+    document.getElementById('chA').style.width = (v1.annual_co2_kg / maxV * 100) + '%';
+    document.getElementById('chB').style.width = (v2.annual_co2_kg / maxV * 100) + '%';
+    if (aWins) {
+      document.getElementById('chA').style.background = 'linear-gradient(90deg,#00d484,#aaff6a)';
+    } else {
+      document.getElementById('chB').style.background = 'linear-gradient(90deg,#00d484,#aaff6a)';
+      document.getElementById('chA').style.background = 'linear-gradient(90deg,#f97316,#ef4444)';
+    }
+  }, 80);
+
+  // Verdict
+  const greenerName = aWins ? v1.vehicle_name : v2.vehicle_name;
+  const pctSaved    = Math.round((data.diff_kg / Math.max(v1.annual_co2_kg, v2.annual_co2_kg)) * 100);
+  const treesSaved  = Math.round(data.diff_kg / 21);
+  document.getElementById('verdictBox').innerHTML = `
+    🌿 <strong>${greenerName}</strong> emits <strong>${data.diff_kg.toLocaleString()} kg less CO₂ per year</strong> — that's <strong>${pctSaved}% cleaner</strong> on ${state.emMode.toUpperCase()} measure.<br>
+    Choosing it saves the equivalent of planting <strong>${treesSaved} trees</strong> every year. 🌳
+  `;
+}
+
+function sbsBox(label, v, cls) {
+  return `
+    <div class="sbs-box ${cls}">
+      <div class="sbs-name">${v.vehicle_icon} ${v.vehicle_name}</div>
+      <div class="sbs-co2">${v.annual_co2_kg.toLocaleString()}</div>
+      <span class="sbs-unit">kg CO₂ / year</span>
+      <div class="sbs-rating" style="background:${v.rating_color}22;color:${v.rating_color};border:1px solid ${v.rating_color}55">${v.rating}</div>
+      <div class="sbs-trees">🌳 ${v.trees_needed} trees to offset</div>
+    </div>`;
+}
+
+// ── Load history ─────────────────────────────────────────────────
+async function loadHistory() {
+  const list = document.getElementById('historyList');
+  list.innerHTML = '<div class="loading-text">Loading...</div>';
+  try {
+    const res  = await fetch('/api/history');
+    const data = await res.json();
+    if (!data.length) { list.innerHTML = '<div class="loading-text">No calculations yet. Try calculating something!</div>'; return; }
+    list.innerHTML = data.map(d => `
+      <div class="hist-item">
+        <span class="hist-icon">${iconForType(d.vehicle_name)}</span>
+        <div class="hist-info">
+          <div class="hist-name">${d.vehicle_name}</div>
+          <div class="hist-meta">${d.emission_mode?.toUpperCase()} · ${d.distance}km · ${d.frequency} · ${formatDate(d.timestamp)}</div>
+        </div>
+        <div>
+          <div class="hist-co2">${d.annual_co2_kg?.toLocaleString()}</div>
+          <div class="hist-unit">kg CO₂/yr</div>
+        </div>
+      </div>`).join('');
+  } catch(e) { list.innerHTML = '<div class="loading-text">Could not load history.</div>'; }
+}
+
+function iconForType(name) {
+  if (!name) return '🚗';
+  const n = name.toLowerCase();
+  if (n.includes('bus'))   return '🚌';
+  if (n.includes('train') || n.includes('metro')) return '🚆';
+  if (n.includes('rickshaw')) return '🛺';
+  if (n.includes('harley') || n.includes('enfield') || n.includes('pulsar') || n.includes('activa') || n.includes('yamaha') || n.includes('ktm')) return '🏍️';
+  return '🚗';
+}
+
+function formatDate(iso) {
+  if (!iso) return '';
+  try { return new Date(iso).toLocaleString(); } catch { return iso; }
+}
+
+// ── Animated counter ──────────────────────────────────────────────
+function animateNum(id, to) {
+  const el  = document.getElementById(id);
+  const dur = 1100;
+  const t0  = performance.now();
+  const tick = (now) => {
+    const p = Math.min((now - t0) / dur, 1);
+    const v = to * (1 - Math.pow(1 - p, 3));
+    el.textContent = v.toLocaleString(undefined, { maximumFractionDigits: 1 });
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+// ── Boot ─────────────────────────────────────────────────────────
+init();
