@@ -180,11 +180,29 @@ def compare(req: CompareRequest):
 
 @app.get("/api/history")
 def history():
-    docs = list(calculations_col.find({}, {"_id":0}).sort("timestamp", -1).limit(15))
+    docs = list(calculations_col.find({}, {"_id":1,"vehicle_id":1,"vehicle_name":1,"distance":1,"frequency":1,"emission_mode":1,"annual_co2_kg":1,"rating":1,"timestamp":1}).sort("timestamp", -1).limit(15))
     for d in docs:
         if "timestamp" in d:
             d["timestamp"] = d["timestamp"].isoformat()
+        if "_id" in d:
+            d["_id"] = str(d["_id"])
     return docs
+
+@app.delete("/api/history/{entry_id}")
+def delete_history(entry_id: str):
+    from bson import ObjectId
+    try:
+        result = calculations_col.delete_one({"_id": ObjectId(entry_id)})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Entry not found")
+        return {"success": True}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.delete("/api/history")
+def delete_all_history():
+    calculations_col.delete_many({})
+    return {"success": True}
 
 # Serve frontend
 app.mount("/static", StaticFiles(directory="static"), name="static")
