@@ -180,10 +180,11 @@ def compare(req: CompareRequest):
 
 @app.get("/api/history")
 def history():
-    docs = list(calculations_col.find({}, {"_id":1,"vehicle_name":1,"distance":1,
-                                           "frequency":1,"emission_mode":1,
-                                           "annual_co2_kg":1,"rating":1,"timestamp":1})
-                .sort("timestamp", -1).limit(15))
+    docs = list(calculations_col.find(
+        {},
+        {"_id":1,"vehicle_name":1,"distance":1,"frequency":1,
+         "emission_mode":1,"annual_co2_kg":1,"rating":1,"timestamp":1}
+    ).sort("timestamp", -1).limit(15))
     for d in docs:
         if "timestamp" in d:
             d["timestamp"] = d["timestamp"].isoformat()
