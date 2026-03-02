@@ -431,14 +431,11 @@ async function loadHistory() {
       list.innerHTML = '<div class="loading-text">No calculations yet. Try calculating something!</div>';
       return;
     }
-
-    // Header row with Clear All button
     const header = `
       <div class="hist-header">
         <span class="hist-count">${data.length} record${data.length > 1 ? 's' : ''}</span>
         <button class="hist-clear-all" onclick="deleteAllHistory()">🗑️ Clear All</button>
       </div>`;
-
     const rows = data.map(d => `
       <div class="hist-item" id="hist-${d._id}">
         <span class="hist-icon">${iconForType(d.vehicle_name)}</span>
@@ -451,10 +448,9 @@ async function loadHistory() {
             <div class="hist-co2">${d.annual_co2_kg?.toLocaleString()}</div>
             <div class="hist-unit">kg CO₂/yr</div>
           </div>
-          <button class="hist-del-btn" onclick="deleteHistoryItem('${d._id}')" title="Delete this record">✕</button>
+          <button class="hist-del-btn" onclick="deleteHistoryItem('${d._id}')" title="Delete">✕</button>
         </div>
       </div>`).join('');
-
     list.innerHTML = header + rows;
   } catch(e) { list.innerHTML = '<div class="loading-text">Could not load history.</div>'; }
 }
@@ -470,22 +466,16 @@ async function deleteHistoryItem(id) {
         el.style.transform = 'translateX(30px)';
         setTimeout(() => { el.remove(); loadHistory(); }, 300);
       }
-    } else {
-      alert('Could not delete record.');
-    }
+    } else { alert('Could not delete record.'); }
   } catch(e) { alert('Server error.'); }
 }
 
 async function deleteAllHistory() {
-  if (!confirm('Delete ALL history records from database? This cannot be undone.')) return;
+  if (!confirm('Delete ALL history? This cannot be undone.')) return;
   try {
     const res = await fetch('/api/history', { method: 'DELETE' });
-    if (res.ok) {
-      const data = await res.json();
-      loadHistory();
-    } else {
-      alert('Could not clear history.');
-    }
+    if (res.ok) loadHistory();
+    else alert('Could not clear history.');
   } catch(e) { alert('Server error.'); }
 }
 
