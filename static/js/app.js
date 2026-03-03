@@ -284,7 +284,11 @@ function showResults(d) {
   bar.style.background = d.annual_co2_kg < 500 ? '#00d484' : d.annual_co2_kg < 3000 ? '#f97316' : '#ef4444';
   document.getElementById('gcPct').textContent = d.vs_global_pct + '% of global avg';
   const tips = TIPS[d.vehicle_type] || [];
-  document.getElementById('tipBox').innerHTML = `<strong>💡 Tip:</strong> ${tips[Math.floor(Math.random() * tips.length)] || ''}`;
+  let tipHTML = `<strong>💡 Tip:</strong> ${tips[Math.floor(Math.random() * tips.length)] || ''}`;
+  if (d.is_zero_tailpipe) {
+    tipHTML = `<strong>⚡ EV on Tailpipe mode:</strong> This vehicle has <strong>zero direct exhaust emissions</strong>. Switch to <strong>LCA</strong> mode to see the full lifecycle CO₂ including battery manufacturing. ` + tipHTML;
+  }
+  document.getElementById('tipBox').innerHTML = tipHTML;
 }
 
 function renderBreakdown(containerId, d) {
