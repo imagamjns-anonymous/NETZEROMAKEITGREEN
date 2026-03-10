@@ -5,10 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NetZero — Vehicle Carbon Footprint</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
+
+<!-- ══ INTRO SCREEN ══ -->
+<div id="intro-screen">
+  <canvas id="intro-canvas"></canvas>
+  <div id="intro-content">
+    <div id="intro-logo">NETZERO</div>
+    <div id="intro-tagline">Vehicle Carbon Footprint Calculator</div>
+    <div id="intro-bar"><div id="intro-bar-fill"></div></div>
+    <div id="intro-skip">press any key to skip</div>
+  </div>
+</div>
+
+<!-- neon particle canvas -->
+<canvas id="neon-canvas"></canvas>
+<div class="scanlines"></div>
 
 <div class="bg-blobs">
   <div class="blob b1"></div>
@@ -18,7 +33,7 @@
 
 <!-- ══════════════ NAVBAR ══════════════ -->
 <nav class="navbar">
-  <div class="nav-logo" style="cursor:pointer" onclick="goPage('home')">🌿 NETZERO</div>
+  <div class="nav-logo">🌿 NETZERO</div>
   <div class="nav-links">
     <button class="nav-btn active" data-page="home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -362,7 +377,3 @@
 
     <div class="footer-text">
       <p class="made-by">Made by <strong>DSEU Dwarka</strong></p>
-
-<script src="/static/js/app.js"></script>
-</body>
-</html>
