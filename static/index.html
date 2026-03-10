@@ -7,22 +7,117 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/style.css">
+
+  <style>
+    /* ════ INTRO SCREEN ════ */
+    #intro-screen {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 99999 !important;
+      background: #030d07;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: opacity 0.9s ease;
+    }
+    #intro-screen.out {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #intro-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    #intro-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+    #intro-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 10vw, 6.5rem);
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      background: linear-gradient(135deg, #00ff8c 0%, #aaff6a 50%, #00ff8c 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 36px rgba(0,255,140,0.65));
+      animation: logo-shine 2s linear infinite, logo-in 0.7s ease both;
+    }
+    @keyframes logo-shine {
+      from { background-position: 0% center; }
+      to   { background-position: 200% center; }
+    }
+    @keyframes logo-in {
+      from { opacity: 0; transform: scale(0.88) translateY(16px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    #intro-tagline {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+      color: rgba(111,168,130,0.8);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-top: 1rem;
+      animation: fade-up 0.6s ease 0.8s both;
+    }
+    #intro-bar-wrap {
+      width: min(280px, 60vw);
+      height: 2px;
+      background: rgba(0,255,140,0.1);
+      border-radius: 2px;
+      margin: 2rem auto 0;
+      overflow: hidden;
+      animation: fade-up 0.5s ease 0.6s both;
+    }
+    #intro-bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #00ff8c, #aaff6a);
+      box-shadow: 0 0 12px rgba(0,255,140,0.9);
+      transition: width 0.04s linear;
+    }
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ════ SCANLINES ════ */
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(0,255,140,0.012) 3px,
+        rgba(0,255,140,0.012) 4px
+      );
+    }
+  </style>
 </head>
 <body>
 
-<!-- ══ INTRO SCREEN ══ -->
+<!-- ════ INTRO SCREEN ════ -->
 <div id="intro-screen">
   <canvas id="intro-canvas"></canvas>
   <div id="intro-content">
     <div id="intro-logo">NETZERO</div>
     <div id="intro-tagline">Vehicle Carbon Footprint Calculator</div>
-    <div id="intro-bar"><div id="intro-bar-fill"></div></div>
-    <div id="intro-skip">press any key to skip</div>
+    <div id="intro-bar-wrap"><div id="intro-bar-fill"></div></div>
   </div>
 </div>
 
-<!-- neon particle canvas -->
-<canvas id="neon-canvas"></canvas>
+<!-- background particle canvas -->
+<canvas id="neon-canvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
 <div class="scanlines"></div>
 
 <div class="bg-blobs">
@@ -377,3 +472,693 @@
 
     <div class="footer-text">
       <p class="made-by">Made by <strong>DSEU Dwarka</strong></p>
+          <p class="footer-sub">Carbon data sourced from IPCC · EPA · JRC</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ════ INTRO + PARTICLES JS ════ -->
+<script>
+(function () {
+  'use strict';
+
+  // ── Intro Arc Animation ───────────────────────────────────────
+  var screen   = document.getElementById('intro-screen');
+  var icanvas  = document.getElementById('intro-canvas');
+  var barFill  = document.getElementById('intro-bar-fill');
+  var ictx     = icanvas.getContext('2d');
+  var W = 0, H = 0, exited = false;
+  var TOTAL = 3400;
+  var t0 = performance.now();
+
+  function resize() {
+    W = icanvas.width  = window.innerWidth;
+    H = icanvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // particles for intro bg
+  var ipts = [];
+  for (var i = 0; i < 80; i++) {
+    ipts.push({
+      x:  Math.random(), y: Math.random(),
+      vx: (Math.random() - 0.5) * 0.0003,
+      vy: (Math.random() - 0.5) * 0.0003,
+      r:  Math.random() * 1.2 + 0.3,
+      a:  Math.random() * 0.4 + 0.1,
+      ph: Math.random() * Math.PI * 2
+    });
+  }
+
+  var rafId;
+  function frame(ts) {
+    var elapsed = ts - t0;
+    var raw = Math.min(elapsed / TOTAL, 1);
+    var eased = raw < 0.5 ? 2*raw*raw : 1 - Math.pow(-2*raw+2,2)/2;
+
+    ictx.clearRect(0, 0, W, H);
+
+    // floating particles
+    ipts.forEach(function(p) {
+      p.ph += 0.016;
+      p.x = ((p.x + p.vx) + 1) % 1;
+      p.y = ((p.y + p.vy) + 1) % 1;
+      var alpha = p.a * (0.5 + 0.5 * Math.sin(p.ph));
+      ictx.beginPath();
+      ictx.arc(p.x * W, p.y * H, p.r, 0, Math.PI * 2);
+      ictx.fillStyle = 'rgba(0,255,140,' + alpha + ')';
+      ictx.shadowColor = '#00ff8c'; ictx.shadowBlur = 5;
+      ictx.fill();
+    });
+
+    // neon arc
+    var cx = W * 0.5;
+    var cy = H * 0.68;
+    var R  = Math.min(W, H) * 0.36;
+    var sa = Math.PI;
+    var ea = Math.PI + eased * Math.PI;
+
+    // outer halo
+    ictx.save();
+    ictx.beginPath();
+    ictx.arc(cx, cy, R * 1.2, sa, ea);
+    ictx.strokeStyle = 'rgba(0,255,140,' + (0.05 * eased) + ')';
+    ictx.lineWidth = 30; ictx.shadowBlur = 0;
+    ictx.stroke(); ictx.restore();
+
+    // main arc
+    ictx.save();
+    ictx.beginPath();
+    ictx.arc(cx, cy, R, sa, ea);
+    var g = ictx.createLinearGradient(cx-R, cy, cx+R, cy);
+    g.addColorStop(0,   'rgba(0,255,140,0.05)');
+    g.addColorStop(0.4, 'rgba(0,255,140,0.9)');
+    g.addColorStop(1,   'rgba(170,255,106,0.95)');
+    ictx.strokeStyle = g;
+    ictx.lineWidth = 2.5;
+    ictx.shadowColor = '#00ff8c'; ictx.shadowBlur = 22;
+    ictx.stroke(); ictx.restore();
+
+    // dashed inner arc
+    ictx.save();
+    ictx.beginPath();
+    ictx.arc(cx, cy, R * 0.76, sa, ea);
+    ictx.strokeStyle = 'rgba(0,255,140,' + (0.2 * eased) + ')';
+    ictx.lineWidth = 1; ictx.setLineDash([5,9]);
+    ictx.shadowColor = '#00ff8c'; ictx.shadowBlur = 6;
+    ictx.stroke(); ictx.setLineDash([]); ictx.restore();
+
+    // comet tip + trail
+    if (eased > 0.04) {
+      var tipX = cx + R * Math.cos(ea);
+      var tipY = cy + R * Math.sin(ea);
+      for (var t = 1; t <= 7; t++) {
+        var ta = ea - t * 0.035;
+        ictx.save();
+        ictx.beginPath();
+        ictx.arc(cx + R*Math.cos(ta), cy + R*Math.sin(ta), Math.max(0.5, 3.5 - t*0.4), 0, Math.PI*2);
+        ictx.fillStyle = 'rgba(0,255,140,' + (0.65 - t*0.08) + ')';
+        ictx.shadowBlur = 10; ictx.shadowColor = '#00ff8c';
+        ictx.fill(); ictx.restore();
+      }
+      ictx.save();
+      ictx.beginPath(); ictx.arc(tipX, tipY, 4.5, 0, Math.PI*2);
+      ictx.fillStyle = '#00ff8c';
+      ictx.shadowColor = '#00ff8c'; ictx.shadowBlur = 28;
+      ictx.fill(); ictx.restore();
+    }
+
+    // radial floor glow
+    var rg = ictx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.9);
+    rg.addColorStop(0, 'rgba(0,255,140,' + (0.04 * eased) + ')');
+    rg.addColorStop(1, 'transparent');
+    ictx.fillStyle = rg; ictx.fillRect(0, 0, W, H);
+
+    // progress bar
+    if (barFill) barFill.style.width = (raw * 100) + '%';
+
+    if (!exited) rafId = requestAnimationFrame(frame);
+  }
+  rafId = requestAnimationFrame(frame);
+
+  function exit() {
+    if (exited) return;
+    exited = true;
+    cancelAnimationFrame(rafId);
+    screen.classList.add('out');
+    setTimeout(function() { screen.style.display = 'none'; }, 950);
+  }
+
+  setTimeout(exit, TOTAL + 300);
+  document.addEventListener('keydown', exit, { once: true });
+  screen.addEventListener('click', exit);
+})();
+
+// ── Background Particle Network ────────────────────────────────────
+(function () {
+  var canvas = document.getElementById('neon-canvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = 0, H = 0;
+  var mouse = { x: -999, y: -999 };
+
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  window.addEventListener('mousemove', function(e) { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+  var particles = [];
+  for (var i = 0; i < 110; i++) {
+    particles.push({
+      x:  Math.random(), y: Math.random(),
+      vx: (Math.random() - 0.5) * 0.00032,
+      vy: (Math.random() - 0.5) * 0.00032,
+      r:  Math.random() * 1.4 + 0.3,
+      a:  Math.random() * 0.5 + 0.1,
+      ph: Math.random() * Math.PI * 2
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+
+    for (var i = 0; i < particles.length; i++) {
+      for (var j = i + 1; j < particles.length; j++) {
+        var ax = particles[i].x * W, ay = particles[i].y * H;
+        var bx = particles[j].x * W, by = particles[j].y * H;
+        var d = Math.sqrt((ax-bx)*(ax-bx) + (ay-by)*(ay-by));
+        if (d < 100) {
+          ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by);
+          ctx.strokeStyle = 'rgba(0,255,140,' + ((1 - d/100) * 0.11) + ')';
+          ctx.lineWidth = 0.6; ctx.shadowBlur = 0; ctx.stroke();
+        }
+      }
+    }
+
+    particles.forEach(function(p) {
+      p.ph += 0.018;
+      p.x = ((p.x + p.vx) + 1) % 1;
+      p.y = ((p.y + p.vy) + 1) % 1;
+      var px = p.x * W, py = p.y * H;
+      var dx = px - mouse.x, dy = py - mouse.y;
+      var dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 130 && dist > 0) {
+        p.x += (dx / dist) * (130 - dist) / 130 * 0.0018;
+        p.y += (dy / dist) * (130 - dist) / 130 * 0.0018;
+      }
+      var alpha = p.a * (0.55 + 0.45 * Math.sin(p.ph));
+      ctx.beginPath(); ctx.arc(px, py, p.r, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(0,255,140,' + alpha + ')';
+      ctx.shadowColor = '#00ff8c'; ctx.shadowBlur = 6;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+</script>
+
+<!-- ════ APP LOGIC ════ -->
+<script>
+'use strict';
+
+// ── Page Navigation ──────────────────────────────────────────────
+function goPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const target = document.getElementById('page-' + page);
+  if (target) target.style.display = 'block';
+  const btn = document.querySelector(`.nav-btn[data-page="${page}"]`);
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => goPage(btn.dataset.page));
+});
+
+// Show home page on load
+goPage('home');
+
+
+// ── State ────────────────────────────────────────────────────────
+const state = {
+  vehicles:      {},
+  selectedId:    null,
+  selectedIdA:   null,
+  selectedIdB:   null,
+  emMode:        'tailpipe',
+  appMode:       'single',
+  typeFilter:    'All',
+  freq:          'daily',
+  freqC:         'daily',
+};
+
+// ── Emission mode info ───────────────────────────────────────────
+const EM_INFO = {
+  tailpipe:   '<strong>🏭 Tailpipe:</strong> Only the CO₂ released directly from your exhaust while driving. For EVs this is zero — but it ignores how electricity or fuel is produced upstream.',
+  lca:        '<strong>🔄 LCA (Life Cycle Assessment):</strong> The complete picture — CO₂ from manufacturing the vehicle, producing fuel/electricity, all driving over its lifetime, and final disposal. This is the most accurate real-world measure.',
+  disposable: '<strong>♻️ Disposable / End-of-Life:</strong> Emissions specifically from scrapping, shredding metals, and recycling components (especially lithium-ion battery packs). EVs score higher here due to battery complexity.',
+};
+
+const TIPS = {
+  Petrol:     ['🚗 Carpooling cuts your per-trip footprint in half instantly.','⚡ Switching to an EV eliminates tailpipe emissions entirely.','🔧 Keeping tyre pressure correct improves fuel efficiency by up to 3%.'],
+  Diesel:     ['🌿 Diesel hybrids offer a practical middle ground for long trips.','🛣️ Smooth acceleration and braking cuts fuel consumption significantly.','🚌 For city commutes, public transit can be 5× more efficient per passenger.'],
+  Electric:   ['🌞 Charging from solar or renewables makes your LCA emissions near-zero.','⚡ Zero tailpipe emissions — great for urban air quality.','♻️ Ask your manufacturer about battery take-back and recycling programmes.'],
+  Hybrid:     ['🏙️ Hybrids shine in stop-and-go city traffic — you\'re making a smart choice.','🔋 Plug-in hybrids can run purely on electric for typical daily commutes.','🌱 Your LCA emissions are already well below the average petrol car.'],
+  Motorcycle: ['🚲 For very short trips, a bicycle produces zero emissions.','🔌 Electric motorcycles are now affordable and practical for city use.','🏍️ Motorcycles are lighter — but check your model\'s real-world emissions data.'],
+  SUV:        ['🚙 Large SUVs are among the highest emitters across all three measures.','⚡ Electric SUVs like Tesla Model Y or Hyundai Ioniq 6 are now widely available.','🗓️ Combining errands into fewer trips significantly reduces annual emissions.'],
+  Public:     ['🚌 Excellent choice — public transit emits far less per passenger than any car.','🚶 Walking the last mile keeps your footprint at its absolute minimum.','📱 Transit apps help you plan efficient routes with minimal waiting.'],
+};
+
+// ── Init ─────────────────────────────────────────────────────────
+async function init() {
+  updateEmInfo();
+  setupEmButtons();
+  setupModeTabs();
+  setupFreqButtons('freqGroup', (v) => { state.freq = v; });
+  setupFreqButtons('freqGroupC', (v) => { state.freqC = v; });
+  syncSlider('distance', 'distSlider');
+  syncSlider('distanceC', 'distSliderC');
+  document.getElementById('calcBtn').addEventListener('click', doCalculate);
+  document.getElementById('compareBtn').addEventListener('click', doCompare);
+
+  await loadVehicles();
+}
+
+// ── Load vehicles from API ───────────────────────────────────────
+async function loadVehicles() {
+  try {
+    const res = await fetch('/api/vehicles');
+    state.vehicles = await res.json();
+    buildTypeChips();
+    setupSearch('vehicleSearch', 'vehicleList', 'vSelected', (id) => { state.selectedId = id; });
+    setupSearch('searchA', 'listA', 'selA', (id) => { state.selectedIdA = id; });
+    setupSearch('searchB', 'listB', 'selB', (id) => { state.selectedIdB = id; });
+  } catch(e) {
+    console.error('Failed to load vehicles:', e);
+  }
+}
+
+// ── Emission mode buttons ────────────────────────────────────────
+function setupEmButtons() {
+  document.querySelectorAll('.em-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.em-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.emMode = btn.dataset.mode;
+      updateEmInfo();
+    });
+  });
+}
+
+function updateEmInfo() {
+  document.getElementById('emInfoBox').innerHTML = EM_INFO[state.emMode] || '';
+}
+
+// ── Mode tabs ────────────────────────────────────────────────────
+function setupModeTabs() {
+  document.querySelectorAll('.mode-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      state.appMode = tab.dataset.mode;
+      document.getElementById('singleMode').style.display  = state.appMode === 'single'  ? 'block' : 'none';
+      document.getElementById('compareMode').style.display = state.appMode === 'compare' ? 'block' : 'none';
+      document.getElementById('historyMode').style.display = state.appMode === 'history' ? 'block' : 'none';
+      document.getElementById('resultsCard').style.display        = 'none';
+      document.getElementById('compareResultsCard').style.display = 'none';
+      if (state.appMode === 'history') loadHistory();
+    });
+  });
+}
+
+// ── Frequency buttons ────────────────────────────────────────────
+function setupFreqButtons(groupId, onChange) {
+  document.querySelectorAll(`#${groupId} .pill`).forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll(`#${groupId} .pill`).forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      onChange(btn.dataset.val);
+    });
+  });
+}
+
+// ── Slider <-> input sync ────────────────────────────────────────
+function syncSlider(inputId, sliderId) {
+  const inp = document.getElementById(inputId);
+  const sld = document.getElementById(sliderId);
+  sld.addEventListener('input', () => { inp.value = sld.value; });
+  inp.addEventListener('input', () => { sld.value = Math.min(Math.max(+inp.value, 1), 500); });
+}
+
+// ── Type filter chips ────────────────────────────────────────────
+function buildTypeChips() {
+  const container = document.getElementById('typeChips');
+  const types = ['All', ...new Set(Object.values(state.vehicles).map(v => v.type))];
+  container.innerHTML = types.map(t =>
+    `<button class="chip${t==='All'?' active':''}" data-type="${t}">${t}</button>`
+  ).join('');
+  container.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      state.typeFilter = chip.dataset.type;
+      renderList('vehicleList', document.getElementById('vehicleSearch').value);
+    });
+  });
+}
+
+// ── Vehicle search setup ─────────────────────────────────────────
+function setupSearch(inputId, listId, selectedId, onSelect) {
+  const inp  = document.getElementById(inputId);
+  const list = document.getElementById(listId);
+
+  list._onSelect = (id) => {
+    onSelect(id);
+    showSelected(selectedId, listId, inputId, id);
+  };
+
+  inp.addEventListener('focus', () => renderList(listId, inp.value));
+  inp.addEventListener('input', () => renderList(listId, inp.value));
+  document.addEventListener('click', (e) => {
+    if (!inp.contains(e.target) && !list.contains(e.target)) list.classList.remove('open');
+  });
+}
+
+function renderList(listId, query = '') {
+  const list = document.getElementById(listId);
+  const q = query.toLowerCase();
+  list.innerHTML = '';
+
+  const filtered = Object.entries(state.vehicles).filter(([, v]) => {
+    const matchType = state.typeFilter === 'All' || v.type === state.typeFilter;
+    const matchQ    = !q || v.name.toLowerCase().includes(q) || v.type.toLowerCase().includes(q);
+    return matchType && matchQ;
+  });
+
+  if (!filtered.length) {
+    list.innerHTML = `<div style="padding:1rem;text-align:center;color:var(--muted);font-size:.85rem;">No vehicles found</div>`;
+  } else {
+    filtered.forEach(([id, v]) => {
+      const item = document.createElement('div');
+      item.className = 'vitem';
+      item.innerHTML = `
+        <span class="vi-icon">${v.icon}</span>
+        <div>
+          <div class="vi-name">${v.name}</div>
+          <div class="vi-type">${v.type}</div>
+        </div>
+        <div class="vi-right">
+          <div class="vi-tp">🏭 ${v.tailpipe} kg/km</div>
+          <div class="vi-lca">🔄 ${v.lca} kg/km</div>
+          <div class="vi-disp">♻️ ${v.disposable} kg/km</div>
+        </div>`;
+      item.addEventListener('click', () => { if (list._onSelect) list._onSelect(id); });
+      list.appendChild(item);
+    });
+  }
+  list.classList.add('open');
+}
+
+function showSelected(selectedId, listId, inputId, vehicleId) {
+  const v   = state.vehicles[vehicleId];
+  const el  = document.getElementById(selectedId);
+  if (!v || !el) return;
+  el.style.display = 'flex';
+  el.innerHTML = `
+    <span class="vs-icon">${v.icon}</span>
+    <div class="vs-info">
+      <div class="vs-name">${v.name}</div>
+      <div class="vs-factors">
+        <span class="tp">🏭 Tailpipe: ${v.tailpipe}</span>
+        <span class="lca">🔄 LCA: ${v.lca}</span>
+        <span class="dp">♻️ Disp: ${v.disposable} kg/km</span>
+      </div>
+    </div>
+    <span class="vs-change">Change ✎</span>`;
+  document.getElementById(listId).classList.remove('open');
+  document.getElementById(inputId).value = '';
+
+  el.querySelector('.vs-change').addEventListener('click', () => {
+    el.style.display = 'none';
+    if (selectedId === 'vSelected') state.selectedId  = null;
+    if (selectedId === 'selA')      state.selectedIdA = null;
+    if (selectedId === 'selB')      state.selectedIdB = null;
+    document.getElementById(inputId).focus();
+    renderList(listId, '');
+  });
+}
+
+// ── Calculate ────────────────────────────────────────────────────
+async function doCalculate() {
+  if (!state.selectedId)  { alert('Please select a vehicle.'); return; }
+  const dist = parseFloat(document.getElementById('distance').value);
+  if (!dist || dist <= 0) { alert('Please enter a valid distance.'); return; }
+
+  try {
+    const res = await fetch('/api/calculate', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ vehicle_id: state.selectedId, distance: dist, frequency: state.freq, emission_mode: state.emMode }),
+    });
+    const data = await res.json();
+    showResults(data);
+  } catch(e) { alert('Server error. Is the backend running?'); }
+}
+
+// ── Compare ──────────────────────────────────────────────────────
+async function doCompare() {
+  if (!state.selectedIdA || !state.selectedIdB) { alert('Please select both vehicles.'); return; }
+  if (state.selectedIdA === state.selectedIdB)  { alert('Please pick two different vehicles.'); return; }
+  const dist = parseFloat(document.getElementById('distanceC').value);
+  if (!dist || dist <= 0) { alert('Please enter a valid distance.'); return; }
+
+  try {
+    const res = await fetch('/api/compare', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ vehicle1: state.selectedIdA, vehicle2: state.selectedIdB, distance: dist, frequency: state.freqC, emission_mode: state.emMode }),
+    });
+    const data = await res.json();
+    showCompareResults(data);
+  } catch(e) { alert('Server error. Is the backend running?'); }
+}
+
+// ── Show single results ──────────────────────────────────────────
+function showResults(d) {
+  const card = document.getElementById('resultsCard');
+  card.style.display = 'block';
+  document.getElementById('compareResultsCard').style.display = 'none';
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Header
+  document.getElementById('resVehicleName').textContent = `${d.vehicle_icon} ${d.vehicle_name}`;
+  document.getElementById('resMeta').textContent = `${d.vehicle_type} · ${d.emission_mode.toUpperCase()} mode · ${d.factor_used} kg CO₂/km`;
+
+  // Rating
+  const pill = document.getElementById('ratingPill');
+  pill.textContent = d.rating;
+  pill.style.cssText = `background:${d.rating_color}22;color:${d.rating_color};border:1px solid ${d.rating_color}55;padding:.38rem 1rem;border-radius:50px;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;`;
+
+  // Big number (animated)
+  animateNum('co2Num', d.annual_co2_kg);
+
+  // Breakdown bars (all 3 measures always shown)
+  renderBreakdown('bpRows', d);
+
+  // Tiles
+  document.getElementById('tMonthly').textContent  = d.monthly_co2_kg.toLocaleString();
+  document.getElementById('tDistance').textContent  = d.annual_distance.toLocaleString();
+  document.getElementById('tTrees').textContent     = d.trees_needed.toLocaleString();
+
+  // Global bar
+  const pct = Math.min((d.annual_co2_kg / 10000) * 100, 100);
+  const bar  = document.getElementById('globalBar');
+  bar.style.width      = pct + '%';
+  bar.style.background = d.annual_co2_kg < 500  ? 'linear-gradient(90deg,#00d484,#aaff6a)'
+                       : d.annual_co2_kg < 3000 ? 'linear-gradient(90deg,#fbbf24,#f97316)'
+                       :                          'linear-gradient(90deg,#f97316,#ef4444)';
+  document.getElementById('gcPct').textContent = d.vs_global_pct + '% of global avg';
+
+  // Tip
+  const tips = TIPS[d.vehicle_type] || [];
+  document.getElementById('tipBox').innerHTML = `<strong>💡 Tip:</strong> ${tips[Math.floor(Math.random()*tips.length)] || ''}`;
+}
+
+function renderBreakdown(containerId, d) {
+  const container = document.getElementById(containerId);
+  const rows = [
+    { label:'🏭 Tailpipe',  key:'tailpipe_factor',   cls:'tp',   factor: d.tailpipe_factor },
+    { label:'🔄 LCA',       key:'lca_factor',        cls:'lca',  factor: d.lca_factor },
+    { label:'♻️ Disposal',  key:'disposable_factor', cls:'disp', factor: d.disposable_factor },
+  ];
+  const maxVal = Math.max(d.tailpipe_factor, d.lca_factor, d.disposable_factor) || 1;
+  const activeMode = d.emission_mode === 'tailpipe' ? 'tp' : d.emission_mode === 'lca' ? 'lca' : 'disp';
+
+  container.innerHTML = rows.map(r => {
+    const pct = ((r.factor / maxVal) * 100).toFixed(1);
+    const isActive = r.cls === activeMode;
+    return `
+      <div class="bp-row">
+        <span class="bp-label">${r.label}</span>
+        <div class="bp-track">
+          <div class="bp-fill ${r.cls}" style="width:0%" data-w="${pct}"></div>
+        </div>
+        <span class="bp-val">${r.factor} kg/km</span>
+        <div class="${isActive ? 'bp-active-dot' : 'bp-inactive-dot'}" title="${isActive?'Currently selected mode':''}"></div>
+      </div>`;
+  }).join('');
+
+  // Animate bars
+  setTimeout(() => {
+    container.querySelectorAll('.bp-fill').forEach(el => { el.style.width = el.dataset.w + '%'; });
+  }, 80);
+}
+
+// ── Show compare results ─────────────────────────────────────────
+function showCompareResults(data) {
+  const card = document.getElementById('compareResultsCard');
+  card.style.display = 'block';
+  document.getElementById('resultsCard').style.display = 'none';
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  document.getElementById('cmpEmTag').textContent = state.emMode.toUpperCase() + ' emissions';
+
+  const v1 = data.vehicle1, v2 = data.vehicle2;
+  const aWins = data.greener === state.selectedIdA;
+
+  // Side-by-side boxes
+  const sbs = document.getElementById('sideBySide');
+  sbs.innerHTML = `
+    ${sbsBox('A', v1, aWins  ? 'winner' : 'loser')}
+    <div class="sbs-divider">${aWins ? '← GREENER' : 'GREENER →'}</div>
+    ${sbsBox('B', v2, !aWins ? 'winner' : 'loser')}
+  `;
+
+  // Breakdown comparison
+  const vA = state.vehicles[state.selectedIdA];
+  const vB = state.vehicles[state.selectedIdB];
+  document.getElementById('cmpBreakdown').innerHTML = `
+    <div class="cbt-title">Full Emission Breakdown — per km driven</div>
+    <div class="cbt-row header">
+      <div class="cbt-label">Type</div>
+      <div>${vA ? vA.name : 'Vehicle A'}</div>
+      <div>${vB ? vB.name : 'Vehicle B'}</div>
+    </div>
+    ${[
+      {label:'🏭 Tailpipe', k:'tailpipe', cls:'tp'},
+      {label:'🔄 LCA',      k:'lca',      cls:'lca'},
+      {label:'♻️ Disposal', k:'disposable',cls:'disp'},
+    ].map(r => `
+      <div class="cbt-row">
+        <div class="cbt-label">${r.label}</div>
+        <div class="cbt-cell"><span class="dot ${r.cls}"></span>${vA?vA[r.k]:'-'} kg/km</div>
+        <div class="cbt-cell"><span class="dot ${r.cls}"></span>${vB?vB[r.k]:'-'} kg/km</div>
+      </div>`).join('')}
+  `;
+
+  // Bar chart
+  const maxV = Math.max(v1.annual_co2_kg, v2.annual_co2_kg) || 1;
+  document.getElementById('chartSection').innerHTML = `
+    <div class="ch-row">
+      <span class="ch-name">${v1.vehicle_name}</span>
+      <div class="ch-track"><div class="ch-fill a" id="chA" style="width:0%"></div></div>
+      <span class="ch-val">${v1.annual_co2_kg.toLocaleString()} kg</span>
+    </div>
+    <div class="ch-row">
+      <span class="ch-name">${v2.vehicle_name}</span>
+      <div class="ch-track"><div class="ch-fill b" id="chB" style="width:0%"></div></div>
+      <span class="ch-val">${v2.annual_co2_kg.toLocaleString()} kg</span>
+    </div>
+  `;
+  setTimeout(() => {
+    document.getElementById('chA').style.width = (v1.annual_co2_kg / maxV * 100) + '%';
+    document.getElementById('chB').style.width = (v2.annual_co2_kg / maxV * 100) + '%';
+    if (aWins) {
+      document.getElementById('chA').style.background = 'linear-gradient(90deg,#00d484,#aaff6a)';
+    } else {
+      document.getElementById('chB').style.background = 'linear-gradient(90deg,#00d484,#aaff6a)';
+      document.getElementById('chA').style.background = 'linear-gradient(90deg,#f97316,#ef4444)';
+    }
+  }, 80);
+
+  // Verdict
+  const greenerName = aWins ? v1.vehicle_name : v2.vehicle_name;
+  const pctSaved    = Math.round((data.diff_kg / Math.max(v1.annual_co2_kg, v2.annual_co2_kg)) * 100);
+  const treesSaved  = Math.round(data.diff_kg / 21);
+  document.getElementById('verdictBox').innerHTML = `
+    🌿 <strong>${greenerName}</strong> emits <strong>${data.diff_kg.toLocaleString()} kg less CO₂ per year</strong> — that's <strong>${pctSaved}% cleaner</strong> on ${state.emMode.toUpperCase()} measure.<br>
+    Choosing it saves the equivalent of planting <strong>${treesSaved} trees</strong> every year. 🌳
+  `;
+}
+
+function sbsBox(label, v, cls) {
+  return `
+    <div class="sbs-box ${cls}">
+      <div class="sbs-name">${v.vehicle_icon} ${v.vehicle_name}</div>
+      <div class="sbs-co2">${v.annual_co2_kg.toLocaleString()}</div>
+      <span class="sbs-unit">kg CO₂ / year</span>
+      <div class="sbs-rating" style="background:${v.rating_color}22;color:${v.rating_color};border:1px solid ${v.rating_color}55">${v.rating}</div>
+      <div class="sbs-trees">🌳 ${v.trees_needed} trees to offset</div>
+    </div>`;
+}
+
+// ── Load history ─────────────────────────────────────────────────
+async function loadHistory() {
+  const list = document.getElementById('historyList');
+  list.innerHTML = '<div class="loading-text">Loading...</div>';
+  try {
+    const res  = await fetch('/api/history');
+    const data = await res.json();
+    if (!data.length) { list.innerHTML = '<div class="loading-text">No calculations yet. Try calculating something!</div>'; return; }
+    list.innerHTML = data.map(d => `
+      <div class="hist-item">
+        <span class="hist-icon">${iconForType(d.vehicle_name)}</span>
+        <div class="hist-info">
+          <div class="hist-name">${d.vehicle_name}</div>
+          <div class="hist-meta">${d.emission_mode?.toUpperCase()} · ${d.distance}km · ${d.frequency} · ${formatDate(d.timestamp)}</div>
+        </div>
+        <div>
+          <div class="hist-co2">${d.annual_co2_kg?.toLocaleString()}</div>
+          <div class="hist-unit">kg CO₂/yr</div>
+        </div>
+      </div>`).join('');
+  } catch(e) { list.innerHTML = '<div class="loading-text">Could not load history.</div>'; }
+}
+
+function iconForType(name) {
+  if (!name) return '🚗';
+  const n = name.toLowerCase();
+  if (n.includes('bus'))   return '🚌';
+  if (n.includes('train') || n.includes('metro')) return '🚆';
+  if (n.includes('rickshaw')) return '🛺';
+  if (n.includes('harley') || n.includes('enfield') || n.includes('pulsar') || n.includes('activa') || n.includes('yamaha') || n.includes('ktm')) return '🏍️';
+  return '🚗';
+}
+
+function formatDate(iso) {
+  if (!iso) return '';
+  try { return new Date(iso).toLocaleString(); } catch { return iso; }
+}
+
+// ── Animated counter ──────────────────────────────────────────────
+function animateNum(id, to) {
+  const el  = document.getElementById(id);
+  const dur = 1100;
+  const t0  = performance.now();
+  const tick = (now) => {
+    const p = Math.min((now - t0) / dur, 1);
+    const v = to * (1 - Math.pow(1 - p, 3));
+    el.textContent = v.toLocaleString(undefined, { maximumFractionDigits: 1 });
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+// ── Boot ─────────────────────────────────────────────────────────
+init();
+
+</script>
+</body>
+</html>
