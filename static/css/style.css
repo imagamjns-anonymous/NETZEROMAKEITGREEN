@@ -78,14 +78,40 @@ body {
 }
 .nav-logo {
   font-family: 'Syne', sans-serif; font-size: 1.22rem; font-weight: 800;
-  letter-spacing: 3px; cursor: pointer; color: var(--accent);
-  text-shadow: 0 0 18px var(--accent), 0 0 36px rgba(0,255,140,0.3);
-  transition: text-shadow 0.3s;
-  position: relative;
+  letter-spacing: 3px; cursor: pointer;
+  display: flex; align-items: center; gap: .35rem;
 }
-/* Glitch pseudo-elements */
-.nav-logo::before,
-.nav-logo::after {
+.nav-icon {
+  /* icon never blinks or glitches */
+  display: inline-block;
+}
+.nav-text {
+  color: var(--accent);
+  text-shadow: 0 0 18px var(--accent), 0 0 36px rgba(0,255,140,0.3);
+  position: relative;
+  animation: neon-blink 3s ease-in-out infinite;
+}
+@keyframes neon-blink {
+  0%,  94%, 96%, 98%, 100% {
+    text-shadow: 0 0 18px var(--accent), 0 0 36px rgba(0,255,140,0.3);
+    opacity: 1;
+  }
+  95% {
+    text-shadow: none;
+    opacity: 0.08;
+  }
+  97% {
+    text-shadow: 0 0 28px var(--accent), 0 0 60px var(--accent);
+    opacity: 1;
+  }
+  99% {
+    text-shadow: none;
+    opacity: 0.08;
+  }
+}
+/* Glitch on hover — text only */
+.nav-text::before,
+.nav-text::after {
   content: attr(data-text);
   position: absolute;
   top: 0; left: 0;
@@ -93,19 +119,16 @@ body {
   opacity: 0;
   pointer-events: none;
 }
-.nav-logo:hover {
-  text-shadow: 0 0 28px var(--accent), 0 0 56px var(--accent), 0 0 80px rgba(0,255,140,0.3);
-  animation: glitch-main 0.4s steps(1) forwards;
+.nav-logo:hover .nav-text {
+  animation: neon-blink 3s ease-in-out infinite, glitch-main 0.4s steps(1) forwards;
 }
-.nav-logo:hover::before {
-  opacity: 1;
-  color: #ff004d;
+.nav-logo:hover .nav-text::before {
+  opacity: 1; color: #ff004d;
   animation: glitch-r 0.4s steps(1) forwards;
   clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
 }
-.nav-logo:hover::after {
-  opacity: 1;
-  color: #00f7ff;
+.nav-logo:hover .nav-text::after {
+  opacity: 1; color: #00f7ff;
   animation: glitch-b 0.4s steps(1) forwards;
   clip-path: polygon(0 55%, 100% 55%, 100% 75%, 0 75%);
 }
