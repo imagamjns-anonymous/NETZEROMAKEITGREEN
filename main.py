@@ -113,13 +113,9 @@ def compute(vehicle_id: str, distance: float, frequency: str, emission_mode: str
 
     factor       = v.get(emission_mode, v.get("tailpipe", 0.15))
     annual_co2   = round(annual_km * factor, 2)
-
-    # For rating: if tailpipe is 0 (EVs), use LCA for meaningful rating
-    rating_factor = factor if factor > 0 else v.get("lca", 0)
-    rating_co2    = round(annual_km * rating_factor, 2)
-    tonnes        = round(rating_co2 / 1000, 3)
-    trees         = round(rating_co2 / KG_CO2_PER_TREE, 1)
-    vs_global     = round((rating_co2 / 4700) * 100, 1)  # global avg 4700 kg/yr
+    tonnes        = round(annual_co2 / 1000, 3)
+    trees         = round(annual_co2 / KG_CO2_PER_TREE, 1)
+    vs_global     = round((annual_co2 / 4700) * 100, 1)  # global avg 4700 kg/yr
 
     if   tonnes < 0.5:  rating, color = "Excellent", "#00c896"
     elif tonnes < 1.5:  rating, color = "Good",      "#a3e635"
@@ -145,7 +141,6 @@ def compute(vehicle_id: str, distance: float, frequency: str, emission_mode: str
         "rating":           rating,
         "rating_color":     color,
         "vs_global_pct":    vs_global,
-        "is_zero_tailpipe": factor == 0,
     }
 
 # ── Routes ───────────────────────────────────────────────────────
@@ -181,6 +176,18 @@ def compare(req: CompareRequest):
     r2 = compute(req.vehicle2, req.distance, req.frequency, req.emission_mode)
     diff = abs(round(r1["annual_co2_kg"] - r2["annual_co2_kg"], 2))
     greener = req.vehicle1 if r1["annual_co2_kg"] <= r2["annual_co2_kg"] else req.vehicle2
+    # Save both vehicles to history
+    for req_id, result in [(req.vehicle1, r1), (req.vehicle2, r2)]:
+        calculations_col.insert_one({
+            "vehicle_id":    req_id,
+            "vehicle_name":  result["vehicle_name"],
+            "distance":      req.distance,
+            "frequency":     req.frequency,
+            "emission_mode": req.emission_mode,
+            "annual_co2_kg": result["annual_co2_kg"],
+            "rating":        result["rating"],
+            "timestamp":     datetime.utcnow()
+        })
     return {"vehicle1": r1, "vehicle2": r2, "diff_kg": diff, "greener": greener}
 
 @app.get("/api/history")
