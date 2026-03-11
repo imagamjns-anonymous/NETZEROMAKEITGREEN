@@ -2,41 +2,41 @@
 
 // ── Brand logo map ────────────────────────────────────────────────
 const BRAND_LOGOS = {
-  'hyundai':       'https://www.carlogos.org/car-logos/hyundai-logo-2011.png',
-  'toyota':        'https://www.carlogos.org/car-logos/toyota-logo-2019.png',
-  'honda':         'https://www.carlogos.org/car-logos/honda-logo.png',
-  'suzuki':        'https://www.carlogos.org/car-logos/suzuki-logo.png',
-  'maruti':        'https://www.carlogos.org/car-logos/suzuki-logo.png',
-  'volkswagen':    'https://www.carlogos.org/car-logos/volkswagen-logo-2019.png',
-  'vw polo':       'https://www.carlogos.org/car-logos/volkswagen-logo-2019.png',
-  'tesla':         'https://www.carlogos.org/car-logos/tesla-logo.png',
-  'bmw':           'https://www.carlogos.org/car-logos/bmw-logo-2020.png',
-  'ford':          'https://www.carlogos.org/car-logos/ford-logo-2017.png',
-  'mercedes':      'https://www.carlogos.org/car-logos/mercedes-benz-logo-2011.png',
-  'kia':           'https://www.carlogos.org/car-logos/kia-logo-2021.png',
-  'nissan':        'https://www.carlogos.org/car-logos/nissan-logo-2020.png',
-  'tata':          'https://www.carlogos.org/car-logos/tata-logo.png',
-  'mahindra':      'https://www.carlogos.org/car-logos/mahindra-logo.png',
-  'mg':            'https://www.carlogos.org/car-logos/mg-logo.png',
-  'jeep':          'https://www.carlogos.org/car-logos/jeep-logo.png',
-  'range rover':   'https://www.carlogos.org/car-logos/land-rover-logo-2011.png',
-  'yamaha':        'https://www.carlogos.org/car-logos/yamaha-logo.png',
-  'ktm':           'https://www.carlogos.org/car-logos/ktm-logo.png',
-  'bajaj':         'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Bajaj_Auto_Logo.svg/200px-Bajaj_Auto_svg.png',
+  'hyundai':       'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Hyundai_Motor_Company_logo.svg/200px-Hyundai_Motor_Company_logo.svg.png',
+  'toyota':        'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Toyota_carlogo.svg/200px-Toyota_carlogo.svg.png',
+  'honda':         'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Honda.svg/200px-Honda.svg.png',
+  'suzuki':        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Suzuki_logo_2.svg/200px-Suzuki_logo_2.svg.png',
+  'maruti':        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Suzuki_logo_2.svg/200px-Suzuki_logo_2.svg.png',
+  'volkswagen':    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/200px-Volkswagen_logo_2019.svg.png',
+  'vw':            'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/200px-Volkswagen_logo_2019.svg.png',
+  'tesla':         'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Tesla_Motors.svg/200px-Tesla_Motors.svg.png',
+  'bmw':           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/200px-BMW.svg.png',
+  'ford':          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ford_Motor_Company_Logo.svg/200px-Ford_Motor_Company_Logo.svg.png',
+  'mercedes':      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/200px-Mercedes-Logo.svg.png',
+  'kia':           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Kia-logo.png/200px-Kia-logo.png',
+  'nissan':        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Nissan_2020_logo.svg/200px-Nissan_2020_logo.svg.png',
+  'tata':          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Tata_logo.svg/200px-Tata_logo.svg.png',
+  'mahindra':      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Mahindra_New_Logo.svg/200px-Mahindra_New_Logo.svg.png',
+  'mg':            'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/MG_Motor.svg/200px-MG_Motor.svg.png',
+  'jeep':          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Jeep_logo.svg/200px-Jeep_logo.svg.png',
+  'range rover':   'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Land_Rover_logo.svg/200px-Land_Rover_logo.svg.png',
+  'land rover':    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Land_Rover_logo.svg/200px-Land_Rover_logo.svg.png',
+  'yamaha':        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Yamaha_Motor_logo.svg/200px-Yamaha_Motor_logo.svg.png',
+  'ktm':           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/KTM_Logo.svg/200px-KTM_Logo.svg.png',
+  'bajaj':         'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Bajaj_Auto_Logo.svg/200px-Bajaj_Auto_Logo.svg.png',
   'royal enfield': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Royal_Enfield_logo.svg/200px-Royal_Enfield_logo.svg.png',
-  'harley':        'https://www.carlogos.org/car-logos/harley-davidson-logo.png',
+  'harley':        'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Harley-Davidson_logo.svg/200px-Harley-Davidson_logo.svg.png',
 };
 
 function getBrandLogo(name) {
   const lower = name.toLowerCase();
-  // longest match first
-  const sorted = Object.keys(BRAND_LOGOS).sort((a,b) => b.length - a.length);
+  // longest match first so 'range rover' beats 'rover', 'royal enfield' beats 'royal'
+  const sorted = Object.keys(BRAND_LOGOS).sort((a, b) => b.length - a.length);
   for (const brand of sorted) {
     if (lower.includes(brand)) return BRAND_LOGOS[brand];
   }
   return null;
 }
-
 
 
 // ── Page Navigation ──────────────────────────────────────────────
