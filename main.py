@@ -18,7 +18,7 @@ app.add_middleware(
 )
 
 # ── MongoDB ─────────────────────────────────────────────────────
-MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/")
+MONGO_URI = os.environ.get("MONGO_URI")
 client    = MongoClient(MONGO_URI)
 db        = client["ecotrack"]
 vehicles_col     = db["vehicles"]
