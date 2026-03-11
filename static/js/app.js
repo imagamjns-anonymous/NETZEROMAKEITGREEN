@@ -1,36 +1,59 @@
 'use strict';
 
-// ── Brand logo map ────────────────────────────────────────────────
+// ── Brand logos — inline SVG, zero CDN dependency ─────────────────
 const BRAND_LOGOS = {
-  'hyundai':       'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Hyundai_Motor_Company_logo.svg/200px-Hyundai_Motor_Company_logo.svg.png',
-  'toyota':        'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Toyota_carlogo.svg/200px-Toyota_carlogo.svg.png',
-  'honda':         'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Honda.svg/200px-Honda.svg.png',
-  'suzuki':        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Suzuki_logo_2.svg/200px-Suzuki_logo_2.svg.png',
-  'maruti':        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Suzuki_logo_2.svg/200px-Suzuki_logo_2.svg.png',
-  'volkswagen':    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/200px-Volkswagen_logo_2019.svg.png',
-  'vw':            'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/200px-Volkswagen_logo_2019.svg.png',
-  'tesla':         'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Tesla_Motors.svg/200px-Tesla_Motors.svg.png',
-  'bmw':           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/200px-BMW.svg.png',
-  'ford':          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ford_Motor_Company_Logo.svg/200px-Ford_Motor_Company_Logo.svg.png',
-  'mercedes':      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/200px-Mercedes-Logo.svg.png',
-  'kia':           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Kia-logo.png/200px-Kia-logo.png',
-  'nissan':        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Nissan_2020_logo.svg/200px-Nissan_2020_logo.svg.png',
-  'tata':          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Tata_logo.svg/200px-Tata_logo.svg.png',
-  'mahindra':      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Mahindra_New_Logo.svg/200px-Mahindra_New_Logo.svg.png',
-  'mg':            'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/MG_Motor.svg/200px-MG_Motor.svg.png',
-  'jeep':          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Jeep_logo.svg/200px-Jeep_logo.svg.png',
-  'range rover':   'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Land_Rover_logo.svg/200px-Land_Rover_logo.svg.png',
-  'land rover':    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Land_Rover_logo.svg/200px-Land_Rover_logo.svg.png',
-  'yamaha':        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Yamaha_Motor_logo.svg/200px-Yamaha_Motor_logo.svg.png',
-  'ktm':           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/KTM_Logo.svg/200px-KTM_Logo.svg.png',
-  'bajaj':         'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Bajaj_Auto_Logo.svg/200px-Bajaj_Auto_Logo.svg.png',
-  'royal enfield': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Royal_Enfield_logo.svg/200px-Royal_Enfield_logo.svg.png',
-  'harley':        'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Harley-Davidson_logo.svg/200px-Harley-Davidson_logo.svg.png',
+
+  'toyota': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><ellipse cx="96" cy="96" rx="90" ry="90" fill="none" stroke="#eb0a1e" stroke-width="11"/><ellipse cx="96" cy="96" rx="56" ry="36" fill="none" stroke="#eb0a1e" stroke-width="11"/><ellipse cx="96" cy="96" rx="19" ry="90" fill="none" stroke="#eb0a1e" stroke-width="11"/></svg>`,
+
+  'hyundai': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 96"><text x="96" y="80" font-family="Arial" font-weight="900" font-size="90" fill="#002c5f" text-anchor="middle" font-style="italic">H</text></svg>`,
+
+  'honda': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="8" fill="#cc0000"/><text x="96" y="142" font-family="Arial" font-weight="900" font-size="130" fill="white" text-anchor="middle">H</text></svg>`,
+
+  'volkswagen': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><circle cx="96" cy="96" r="90" fill="#001e50"/><text x="96" y="130" font-family="Arial" font-weight="900" font-size="100" fill="white" text-anchor="middle">VW</text></svg>`,
+
+  'vw': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><circle cx="96" cy="96" r="90" fill="#001e50"/><text x="96" y="130" font-family="Arial" font-weight="900" font-size="100" fill="white" text-anchor="middle">VW</text></svg>`,
+
+  'tesla': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><path d="M96 20 C60 20 30 40 20 60 L40 60 C48 46 65 38 96 38 C127 38 144 46 152 60 L172 60 C162 40 132 20 96 20Z" fill="#cc0000"/><path d="M96 38 L76 60 L96 170 L116 60 Z" fill="#cc0000"/><path d="M76 60 L96 80 L116 60 Z" fill="#cc0000"/></svg>`,
+
+  'bmw': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><circle cx="96" cy="96" r="90" fill="white" stroke="#000" stroke-width="8"/><path d="M96 6 A90 90 0 0 1 186 96 L96 96 Z" fill="#0066cc"/><path d="M6 96 A90 90 0 0 1 96 6 L96 96 Z" fill="white"/><path d="M96 186 A90 90 0 0 1 6 96 L96 96 Z" fill="#0066cc"/><path d="M186 96 A90 90 0 0 1 96 186 L96 96 Z" fill="white"/><circle cx="96" cy="96" r="30" fill="none" stroke="#000" stroke-width="8"/><text x="96" y="40" font-family="Arial" font-weight="900" font-size="22" fill="#000" text-anchor="middle">BMW</text></svg>`,
+
+  'mercedes': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><circle cx="96" cy="96" r="90" fill="white" stroke="#888" stroke-width="5"/><circle cx="96" cy="96" r="60" fill="none" stroke="#888" stroke-width="5"/><line x1="96" y1="36" x2="96" y2="96" stroke="#888" stroke-width="5"/><line x1="96" y1="96" x2="44" y2="145" stroke="#888" stroke-width="5"/><line x1="96" y1="96" x2="148" y2="145" stroke="#888" stroke-width="5"/></svg>`,
+
+  'kia': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"><rect width="300" height="100" rx="8" fill="#05141f"/><text x="150" y="75" font-family="Arial" font-weight="900" font-size="72" fill="white" text-anchor="middle" letter-spacing="8">KIA</text></svg>`,
+
+  'nissan': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"><rect width="300" height="100" rx="8" fill="#c01a24"/><text x="150" y="72" font-family="Arial" font-weight="900" font-size="52" fill="white" text-anchor="middle" letter-spacing="4">NISSAN</text></svg>`,
+
+  'ford': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 130"><ellipse cx="150" cy="65" rx="145" ry="60" fill="#003478"/><text x="150" y="90" font-family="Georgia" font-weight="bold" font-size="72" fill="white" text-anchor="middle" font-style="italic">Ford</text></svg>`,
+
+  'tata': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"><rect width="300" height="100" rx="8" fill="#0071ce"/><text x="150" y="72" font-family="Arial" font-weight="900" font-size="62" fill="white" text-anchor="middle" letter-spacing="6">TATA</text></svg>`,
+
+  'mahindra': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"><rect width="300" height="100" rx="8" fill="#e31837"/><text x="150" y="68" font-family="Arial" font-weight="900" font-size="42" fill="white" text-anchor="middle" letter-spacing="2">MAHINDRA</text></svg>`,
+
+  'mg': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><circle cx="96" cy="96" r="90" fill="#c8102e"/><text x="96" y="128" font-family="Arial" font-weight="900" font-size="88" fill="white" text-anchor="middle">MG</text></svg>`,
+
+  'jeep': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"><rect width="300" height="100" rx="8" fill="#1a1a1a"/><text x="150" y="72" font-family="Arial" font-weight="900" font-size="62" fill="white" text-anchor="middle" letter-spacing="6">JEEP</text></svg>`,
+
+  'range rover': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"><rect width="300" height="100" rx="8" fill="#005a2b"/><text x="150" y="58" font-family="Arial" font-weight="700" font-size="28" fill="white" text-anchor="middle" letter-spacing="3">RANGE ROVER</text></svg>`,
+
+  'land rover': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"><rect width="300" height="100" rx="8" fill="#005a2b"/><text x="150" y="58" font-family="Arial" font-weight="700" font-size="28" fill="white" text-anchor="middle" letter-spacing="3">LAND ROVER</text></svg>`,
+
+  'suzuki': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"><rect width="300" height="100" rx="8" fill="#e4000f"/><text x="150" y="72" font-family="Arial" font-weight="900" font-size="52" fill="white" text-anchor="middle" letter-spacing="4">SUZUKI</text></svg>`,
+
+  'maruti': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"><rect width="300" height="100" rx="8" fill="#e4000f"/><text x="150" y="72" font-family="Arial" font-weight="900" font-size="52" fill="white" text-anchor="middle" letter-spacing="4">SUZUKI</text></svg>`,
+
+  'yamaha': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><circle cx="96" cy="96" r="90" fill="#0a1464"/><circle cx="96" cy="96" r="60" fill="none" stroke="white" stroke-width="6"/><line x1="96" y1="36" x2="96" y2="156" stroke="white" stroke-width="6"/><line x1="44" y1="126" x2="148" y2="66" stroke="white" stroke-width="6"/><line x1="44" y1="66" x2="148" y2="126" stroke="white" stroke-width="6"/></svg>`,
+
+  'ktm': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"><rect width="300" height="100" rx="8" fill="#ff6600"/><text x="150" y="78" font-family="Arial" font-weight="900" font-size="72" fill="white" text-anchor="middle" letter-spacing="6">KTM</text></svg>`,
+
+  'bajaj': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"><rect width="300" height="100" rx="8" fill="#003087"/><text x="150" y="72" font-family="Arial" font-weight="900" font-size="52" fill="white" text-anchor="middle" letter-spacing="4">BAJAJ</text></svg>`,
+
+  'royal enfield': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"><rect width="300" height="100" rx="8" fill="#2d0000"/><text x="150" y="48" font-family="Georgia" font-weight="700" font-size="22" fill="#c8a850" text-anchor="middle" letter-spacing="3">ROYAL ENFIELD</text><line x1="30" y1="58" x2="270" y2="58" stroke="#c8a850" stroke-width="1.5"/><text x="150" y="80" font-family="Georgia" font-weight="700" font-size="18" fill="#c8a850" text-anchor="middle" letter-spacing="4">EST. 1901</text></svg>`,
+
+  'harley': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120"><rect width="300" height="120" rx="8" fill="#ff6600"/><text x="150" y="50" font-family="Arial" font-weight="900" font-size="20" fill="white" text-anchor="middle" letter-spacing="3">HARLEY-DAVIDSON</text><text x="150" y="95" font-family="Arial" font-weight="900" font-size="36" fill="white" text-anchor="middle" letter-spacing="2">MOTOR CO.</text></svg>`,
 };
 
 function getBrandLogo(name) {
   const lower = name.toLowerCase();
-  // longest match first so 'range rover' beats 'rover', 'royal enfield' beats 'royal'
   const sorted = Object.keys(BRAND_LOGOS).sort((a, b) => b.length - a.length);
   for (const brand of sorted) {
     if (lower.includes(brand)) return BRAND_LOGOS[brand];
@@ -220,9 +243,9 @@ function renderList(listId, query = '') {
     filtered.forEach(([id, v]) => {
       const item = document.createElement('div');
       item.className = 'vitem';
-      const logoUrl = getBrandLogo(v.name);
-      const logoHtml = logoUrl
-        ? `<img class="vi-logo" src="${logoUrl}" alt="${v.name}" onerror="this.style.display='none'">`
+      const logoSvg = getBrandLogo(v.name);
+      const logoHtml = logoSvg
+        ? `<div class="vi-logo-svg">${logoSvg}</div>`
         : `<span class="vi-icon">${v.icon}</span>`;
       item.innerHTML = `
         <div class="vi-thumb">${logoHtml}</div>
